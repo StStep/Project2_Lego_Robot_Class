@@ -1,3 +1,6 @@
+#ifndef _TaskMain_
+#define _TaskMain_
+
 // ECRobot++ API (http://lejos-osek.sourceforge.net/html/index.html)
 #include "LightSensor.h"
 #include "SonarSensor.h"

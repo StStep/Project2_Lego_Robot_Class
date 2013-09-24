@@ -12,17 +12,18 @@ using namespace ecrobot;
 
 TouchSensor  touch(PORT_4);
 
-class test_object {
+class test_object 
+{
 
 public:
 
-	test_object(int flower) {
-	
-		this->flower = flower;
-	
+	test_object(int flower)
+	{
+		this->flower = flower;	
 	}
 	
-	virtual ~test_object() {
+	virtual ~test_object() 
+	{
 	
 	}
 	
@@ -30,7 +31,8 @@ public:
 	
 	bool FlowerPartyYall();
 	
-	int GetFlower() {
+	int GetFlower() 
+	{
 		return this->flower;
 	}
 
