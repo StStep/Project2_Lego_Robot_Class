@@ -94,3 +94,5 @@ void user_1ms_isr_type2(void)
 }
 
 } //End Extern C
+#endif 
+ 
