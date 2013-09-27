@@ -19,6 +19,10 @@ using namespace ecrobot;
 #define BLACKHIGH 385
 #define BLACKLOW 325
 
+//Light Sensor Defines
+#define isBlk(x) (x < BLACKHIGH && x >BLACKLOW)
+#define isWht(x) (x < WHITEHIGH && x >WHITELOW)
+
 //typedef enum{BLACK, GREY, WHITE} Color;
 
 extern "C" 

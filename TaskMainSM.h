@@ -5,26 +5,23 @@
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 
-//First Imp  of Find #defines
-
-#define TIME 100
-
 //From Early Imp
 extern "C" 
 {
-typedef enum{INIT, FIND, ALIGN, STEP, ROTATE_ALIGN, IDLE} state_t;
-float baser = .3;
-float basel = .3;
+typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} state_t;
 
 state_t state_init(void);
-state_t state_find(void);
-state_t state_align(void);
+state_t state_fwd_until_tan(void);
+// state_t state_find(void);
+// state_t state_align(void);
 state_t state_step(void);
 state_t state_rotate_align(void);
 state_t state_idle(void);
 
+//Silly globasl, fix later
 state_t next_state;
 int bright_l, bright_r;
+int tape_flag = 0;
 
 }
  
