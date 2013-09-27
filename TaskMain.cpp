@@ -9,9 +9,6 @@ extern "C"
 TASK(TaskMain)
 {
 	// LOCATION B: LOOP INITIALIZATION CODE - Move to HOOK???
-	//FlowerPower1 = new test_object(4);
-		
-	//FlowerPower1->ProcessFlower(); 
 	
 	// Endless loop
 	while(1)
@@ -36,7 +33,7 @@ TASK(TaskMain)
 		lcd.putf("sdn", "PublixTest: ", PublixTest,0); // In flowers
         lcd.disp(); // Update the LCD display
 		
-		if(bump ==1)
+		if(bump == 1 )
 		{
 			TaskMainSM_inst->Touch();
 		}
@@ -49,7 +46,6 @@ TASK(TaskMain)
 		clock.wait(MAIN_WAIT); //TODO: Find a better timing method than this later, shouldn't need
 	}
 	
-	//delete FlowerPower;
 } // End Task
 
 } // End Extern C

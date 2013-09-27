@@ -4,6 +4,8 @@
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 
+#include "Lcd.h"
+
 //#include "test_object.h"
 #include "TaskMainSM.h"
 

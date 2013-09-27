@@ -9,8 +9,7 @@ void TaskMainSM::Touch(void)
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
     BEGIN_TRANSITION_MAP                      				// - Current State -
-	    TRANSITION_MAP_ENTRY (ST_START)  				// TESTING
-		TRANSITION_MAP_ENTRY (ST_FIND)				  	// ST_Start
+		TRANSITION_MAP_ENTRY (ST_START)				  	// ST_Start
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Find
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)     // ST_Track
         TRANSITION_MAP_ENTRY (ST_TRACK)              	// ST_Idle
@@ -23,7 +22,6 @@ void TaskMainSM::Run(void)
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
     BEGIN_TRANSITION_MAP                      				// - Current State -
-	    TRANSITION_MAP_ENTRY (ST_START)  				// TESTING
 		TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Start
         TRANSITION_MAP_ENTRY (ST_FIND)  					// ST_Find
         TRANSITION_MAP_ENTRY (ST_TRACK)        		// ST_Track
@@ -37,7 +35,6 @@ void TaskMainSM::Reset(void)
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
     BEGIN_TRANSITION_MAP                      				// - Current State -
-		TRANSITION_MAP_ENTRY (ST_START)  				// TESTING
 		TRANSITION_MAP_ENTRY (ST_START)  				// ST_Start
 		TRANSITION_MAP_ENTRY (ST_START)  				// ST_Find
 		TRANSITION_MAP_ENTRY (ST_START)        		// ST_Track
@@ -56,8 +53,9 @@ void TaskMainSM::ST_Start()
 // SM attempts to find the line
 void TaskMainSM::ST_Find()
 {
-
-		// Endless loop
+	state_t next_state = INIT;
+	
+	// Endless loop
 	while(1)
 	{	
 		// LOCATION C: LOOP CODE
@@ -185,7 +183,7 @@ state_t state_step(void)
 state_t state_rotate_align(void)
 {
 	int tape_flag = 0;
-	while(tape_flag =0)
+	while(tape_flag == 0)
 	{
 		leftMotor.setPWM(basel*FULLSPEED); // Left motor forward
 		rightMotor.setPWM(-baser*FULLSPEED); // Right motor forward
@@ -197,7 +195,7 @@ state_t state_rotate_align(void)
 			tape_flag = 1;
 		}
 	}
-	while(tape_flag = 1)
+	while(tape_flag == 1)
 	{
 		//continue rotating until left sensor off black tape
 		leftMotor.setPWM(basel*FULLSPEED); // Left motor forward

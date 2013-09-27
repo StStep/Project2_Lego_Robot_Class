@@ -6,6 +6,7 @@
 #include "SonarSensor.h"
 #include "SoundSensor.h"
 #include "TouchSensor.h"
+#include "Clock.h"
 #include "Motor.h"
 #include "Nxt.h"
 

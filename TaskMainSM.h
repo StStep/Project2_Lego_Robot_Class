@@ -4,6 +4,18 @@
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 
+//First Imp  of Find #defines
+
+// Value for each motor to move full speed ahead
+#define FULLSPEED 100
+#define TIME 100
+
+// values for colored tape
+#define WHITEHIGH 600
+#define WHITELOW 540
+#define BLACKHIGH 385
+#define BLACKLOW 325
+
 
 //From Early Imp
 extern "C" 
@@ -18,6 +30,8 @@ state_t state_align(void);
 state_t state_step(void);
 state_t state_rotate_align(void);
 state_t state_idle(void);
+
+int bright_l, bright_r;
 
 }
  
