@@ -11,7 +11,8 @@
 #include "Motor.h"
 #include "Nxt.h"
 
-#include "test_object.h"
+//#include "test_object.h"
+#include "TaskMainSM.h"
 
 using namespace ecrobot;
 
@@ -30,7 +31,31 @@ using namespace ecrobot;
 // Time to wait (in milliseconds) between control updates
 #define MAIN_WAIT 200
 
+#include <new>
+#include <malloc.h>
+
+//Overide new and delete to reduce file size
+void* operator new(std::size_t size) {
+    return malloc(size);
+}
+
+void* operator new[](std::size_t size) {
+    return malloc(size);
+}
+
+void operator delete(void* ptr) {
+    free(ptr);
+}
+
+void operator delete[](void* ptr) {
+    free(ptr);
+}
+
 extern "C" {
+
+//Overide Virtual Function call to reduce file size
+void __cxa_pure_virtual() { while(1); }
+
 
 #include "kernel.h"
 #include "kernel_id.h"
@@ -48,7 +73,7 @@ DeclareTask(TaskRecord);
 LightSensor  leftLight(PORT_1, true); // init light sensor ON
 LightSensor  rightLight(PORT_3, true);
 SonarSensor  sonar(PORT_2);
-//TouchSensor  touch(PORT_4);
+TouchSensor  touch(PORT_4);
 
 // Initialize Actuators
 Motor steering(PORT_A);
@@ -64,18 +89,22 @@ Lcd lcd;
 int PublixTest = 0;	
 
 //Initialize Test Object
-test_object *FlowerPower;
+//test_object *FlowerPower1;
+
+TaskMainSM *TaskMainSM_inst;
 
 /* nxtOSEK hook on initilization */
 void ecrobot_device_initialize(void)
 {
   //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
+  TaskMainSM_inst = new TaskMainSM();
 }
 
 /* nxtOSEK hook on termination */
 void ecrobot_device_terminate(void)
 {
   //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
+  delete TaskMainSM_inst;
 }
 
 /* nxtOSEK hook to be invoked from an ISR in category 2 */

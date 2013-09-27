@@ -39,7 +39,7 @@ const StateStruct* GetStateMap() {\
     { reinterpret_cast<StateFunc>(entry) },
  
 #define END_STATE_MAP \
-    { reinterpret_cast<StateFunc>(NULL) }\
+    { NULL }\
     }; \
     return &StateMap[0]; }
  

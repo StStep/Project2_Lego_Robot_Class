@@ -26,10 +26,10 @@ private:
  
     // state map to define state function order
     BEGIN_STATE_MAP
-        STATE_MAP_ENTRY(ST_Idle)
-        STATE_MAP_ENTRY(ST_Stop)
-        STATE_MAP_ENTRY(ST_Start)
-        STATE_MAP_ENTRY(ST_ChangeSpeed)
+        STATE_MAP_ENTRY(&MotorSM::ST_Idle)
+        STATE_MAP_ENTRY(&MotorSM::ST_Stop)
+        STATE_MAP_ENTRY(&MotorSM::ST_Start)
+        STATE_MAP_ENTRY(&MotorSM::ST_ChangeSpeed)
     END_STATE_MAP
  
     // state enumeration order must match the order of state
