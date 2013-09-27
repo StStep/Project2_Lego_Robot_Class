@@ -8,10 +8,11 @@ using namespace ecrobot;
 
 // Value for each motor to move full speed ahead
 #define FULLSPEED 100
-#define BASESPEED 33
+#define BASESPEED 30
+#define HALFSPEED 15
 #define NOSPEED 0
 
-#define MOTORTIMESTEP 100
+#define MOTORTIMESTEP 50
 
 extern "C" {
 

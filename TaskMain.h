@@ -3,8 +3,8 @@
 
 #include "SensorSuite.h"
 #include "MotorSuite.h"
+#include "LCDSuite.h"
 
-#include "Lcd.h"
 
 //#include "test_object.h"
 #include "TaskMainSM.h"
@@ -56,9 +56,6 @@ void __cxa_pure_virtual() { while(1); }
 DeclareCounter(SysTimerCnt);
 DeclareTask(TaskMain); 
 DeclareTask(TaskRecord);
-
-// Initialize LCD
-Lcd lcd;
 
 int PublixTest = 0;	
 

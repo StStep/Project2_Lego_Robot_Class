@@ -4,6 +4,7 @@
 #include "StateMachine.h"
 #include "SensorSuite.h"
 #include "MotorSuite.h"
+#include "LCDSuite.h"
 
 //From Early Imp
 extern "C" 

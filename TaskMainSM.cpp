@@ -64,18 +64,23 @@ void TaskMainSM::ST_Find()
 	switch(next_state)
 	{
 	case INIT:
+		PrintPlease = 1;
 		next_state  = state_init();
 		break;
 	case FWD_UNTIL_TAN:
+		PrintPlease = 2;
 		next_state = state_fwd_until_tan();
 		break;
 	case STEP:
+		PrintPlease = 3;
 		next_state = state_step();
 		break;
 	case ROTATE_ALIGN:
+		PrintPlease = 4;
 		next_state = state_rotate_align();
 		break;
 	case IDLE:
+		PrintPlease = 0;
 		next_state = state_idle();
 		InternalEvent(ST_START);
 		break;
@@ -84,6 +89,10 @@ void TaskMainSM::ST_Find()
 		InternalEvent(ST_START);
 		break;
 	}
+	
+	//Jitter Mode Activate!
+	//leftMotor.setPWM(NOSPEED); // Left motor stop
+	//rightMotor.setPWM(NOSPEED); // Right motor stop
 
 }
  
@@ -121,12 +130,12 @@ state_t state_fwd_until_tan(void)
 	else if(isBlk(bright_r)) 
 	{
 		leftMotor.setPWM(BASESPEED); // Left motor fwd
-		rightMotor.setPWM(NOSPEED); // Right motor stop
+		rightMotor.setPWM(-HALFSPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
 	else if(isBlk(bright_l)) 
 	{
-		leftMotor.setPWM(NOSPEED); // Left motor fwd
+		leftMotor.setPWM(-HALFSPEED); // Left motor fwd
 		rightMotor.setPWM(BASESPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
@@ -136,88 +145,15 @@ state_t state_fwd_until_tan(void)
 		rightMotor.setPWM(BASESPEED); // Right motor forward
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
-	return ret;
 	
-	//else{return ROTATE;}
+	return ret;
 	
 }
 
-// state_t state_find(void)
-// {
-	// //while neither of the sensors have detected black tape, move forward
-	// while(!((bright_l < BLACKHIGH && bright_l >BLACKLOW) || (bright_r < BLACKHIGH && bright_r >BLACKLOW)))
-	// {
-		// leftMotor.setPWM(baser*FULLSPEED); // Left motor forward
-		// rightMotor.setPWM(basel*FULLSPEED); // Right motor forward
-		// clock.wait(TIME); // Perform for duration of .1 seconds
-		// bright_l = leftLight.getBrightness(); // Update
-		// bright_r = rightLight.getBrightness(); 
-	// }
-	// return ALIGN;
-	
-	// //else{return ROTATE;}
-	
-// }
-
-// state_t state_align(void)
-// {
-	// //we want to align both sensors on the line to position 
-	// //the robot if one sensor reaches before the other
-	// while (bright_l < BLACKHIGH && bright_l >BLACKLOW)//while sensor L is alone on the track 
-	// {
-		// baser = 0;
-		// leftMotor.setPWM(basel*FULLSPEED); // Left motor forward
-		// rightMotor.setPWM(baser*FULLSPEED); // Right motor forward
-		// clock.wait(TIME); // Perform for duration of .1 seconds
-		// bright_l = leftLight.getBrightness(); // Update
-		// bright_r = rightLight.getBrightness(); 
-		// if((bright_r < BLACKHIGH && bright_r >BLACKLOW))
-		// {
-		// baser = .3;
-		// basel = .3;
-		// return STEP;}
-	// }
-	// while (bright_r < BLACKHIGH && bright_r >BLACKLOW)//while sensor R is alone on the track 
-	// {
-		// basel = 0;
-		// leftMotor.setPWM(basel*FULLSPEED); // Left motor forward
-		// rightMotor.setPWM(baser*FULLSPEED); // Right motor forward
-		// clock.wait(TIME); // Perform for duration of .1 seconds
-		// bright_l = leftLight.getBrightness(); // Update
-		// bright_r = rightLight.getBrightness(); 
-		// if(bright_l < BLACKHIGH & bright_l >BLACKLOW) 
-		// {
-		// baser = .3;
-		// basel = .3;
-		// return STEP;}
-	// }
-	// baser = .3;
-	// basel = .3;
-	// return STEP;
-// }
-
 state_t state_step(void)
 {
-
-	// //Defualt return state
-	// state_t ret =  STEP;
 	
-	// //Both on line, change states
-	// if((isBlk(bright_l) && isBlk(bright_r)))
-	// {
-		// leftMotor.setPWM(BASESPEED); // Left motor forward
-		// rightMotor.setPWM(BASESPEED); // Right motor forward
-		// clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-		// ret = STEP;
-	// }
-	// else
-	// {
-		// leftMotor.setPWM(NOSPEED); // Left motor stop
-		// rightMotor.setPWM(NOSPEED); // Right motor stop
-		// ret = ROTATE_ALIGN;
-	// }
-	
-		//Defualt return state
+	//Default return state
 	state_t ret =  STEP;
 	
 	//Both on line, change states
@@ -230,12 +166,12 @@ state_t state_step(void)
 	else if(isWht(bright_r)) 
 	{
 		leftMotor.setPWM(BASESPEED); // Left motor fwd
-		rightMotor.setPWM(NOSPEED); // Right motor stop
+		rightMotor.setPWM(-HALFSPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
 	else if(isWht(bright_l)) 
 	{
-		leftMotor.setPWM(NOSPEED); // Left motor fwd
+		leftMotor.setPWM(-HALFSPEED); // Left motor fwd
 		rightMotor.setPWM(BASESPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
@@ -247,32 +183,14 @@ state_t state_step(void)
 	}
 	
 	return ret;
-
-	// //while either sensor is still on black tape
-	// while(((bright_l < BLACKHIGH && bright_l >BLACKLOW) || (bright_r < BLACKHIGH && bright_r >BLACKLOW)))
-	// {
-	// //goforward
-		// leftMotor.setPWM(baser*FULLSPEED); // Left motor forward
-		// rightMotor.setPWM(basel*FULLSPEED); // Right motor forward
-		// clock.wait(TIME); // Perform for duration of .1 seconds
-		// bright_l = leftLight.getBrightness(); // Update
-		// bright_r = rightLight.getBrightness(); 
-	// }
-	// return ROTATE_ALIGN;
 }
 
 
 state_t state_rotate_align(void)
 {
 
-	//Defualt return state
+	//Default return state
 	state_t ret =  ROTATE_ALIGN;
-
-	leftMotor.setPWM(-BASESPEED); // Left motor forward
-	rightMotor.setPWM(BASESPEED); // Right motor backwards
-	clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-	bright_l = leftLight.getBrightness(); // Update light data
-	bright_r = rightLight.getBrightness();
 	
 	if(tape_flag == 0)
 	{ 
@@ -283,12 +201,22 @@ state_t state_rotate_align(void)
 	}
 	else if(tape_flag == 1)
 	{
-		if (!(isBlk(bright_l))) //when left no longer on black
+		if (!(isBlk(bright_l)) || isBlk(bright_r)) //when left no longer on black
 		{
 			tape_flag = 0;
 			ret = IDLE;
 		}
-	}	
+	}
+
+	if (ret == ROTATE_ALIGN) 
+	{
+		leftMotor.setPWM(-BASESPEED); // Left motor forward
+		rightMotor.setPWM(BASESPEED); // Right motor backwards
+		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
+	}
+	//bright_l = leftLight.getBrightness(); // Update light data
+	//bright_r = rightLight.getBrightness();
+
 	
 	return ret;
 
@@ -302,5 +230,8 @@ state_t state_idle(void)
 		
 	return IDLE;
 }
+
+/** Track SM FUnctions for now **/
+
 }
 

@@ -30,7 +30,7 @@ TASK(TaskMain)
 		lcd.putf("sdn", "Dist: ", dist, 0); // In centimeters
 		lcd.putf("sdn", "Bump: ", bump,0); // Binary
 		lcd.putf("sdn", "Steer: ", steer_count,0); // In degrees
-		lcd.putf("sdn", "PublixTest: ", PublixTest,0); // In flowers
+		lcd.putf("sdn", "In State = ", PrintPlease, 0); // In flowers
         lcd.disp(); // Update the LCD display
 		
 		if(bump == 1 )
