@@ -65,20 +65,20 @@ Lcd lcd;
 
 int PublixTest = 0;	
 
-TaskMainSM *TaskMainSM_inst;
+TaskMainSM TaskMainSM_inst;
 
 /* nxtOSEK hook on initilization */
 void ecrobot_device_initialize(void)
 {
   //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
-  TaskMainSM_inst = new TaskMainSM();
+  //TaskMainSM_inst = new TaskMainSM();
 }
 
 /* nxtOSEK hook on termination */
 void ecrobot_device_terminate(void)
 {
   //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
-  delete TaskMainSM_inst;
+  //delete TaskMainSM_inst;
 }
 
 /* nxtOSEK hook to be invoked from an ISR in category 2 */

@@ -31,6 +31,7 @@ state_t state_step(void);
 state_t state_rotate_align(void);
 state_t state_idle(void);
 
+state_t next_state;
 int bright_l, bright_r;
 
 }

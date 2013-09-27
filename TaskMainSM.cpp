@@ -9,7 +9,7 @@ void TaskMainSM::Touch(void)
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
     BEGIN_TRANSITION_MAP                      				// - Current State -
-		TRANSITION_MAP_ENTRY (ST_START)				  	// ST_Start
+		TRANSITION_MAP_ENTRY (ST_FIND)				  	// ST_Start
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Find
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)     // ST_Track
         TRANSITION_MAP_ENTRY (ST_TRACK)              	// ST_Idle
@@ -48,41 +48,38 @@ void TaskMainSM::Reset(void)
 // SM starts here, and does initilizaing thing? or nothing
 void TaskMainSM::ST_Start() 
 {
+	//Remove Later
+	next_state = INIT;
+	
 }
 
 // SM attempts to find the line
 void TaskMainSM::ST_Find()
 {
-	state_t next_state = INIT;
-	
-	// Endless loop
-	while(1)
-	{	
-		// LOCATION C: LOOP CODE
-		switch(next_state)
-		{
-		case INIT:
-			next_state  = state_init();
-			break;
-		case FIND:
-			next_state = state_find();
-			break;
-		case ALIGN:
-			next_state = state_align();
-			break;
-		case STEP:
-			next_state = state_step();
-			break;
-		case ROTATE_ALIGN:
-			next_state = state_rotate_align();
-			break;
-		case IDLE:
-			next_state = state_idle();
-			break;
-		default:
-			next_state = state_find();
-			break;
-		}
+	// LOCATION C: LOOP CODE
+	switch(next_state)
+	{
+	case INIT:
+		next_state  = state_init();
+		break;
+	case FIND:
+		next_state = state_find();
+		break;
+	case ALIGN:
+		next_state = state_align();
+		break;
+	case STEP:
+		next_state = state_step();
+		break;
+	case ROTATE_ALIGN:
+		next_state = state_rotate_align();
+		break;
+	case IDLE:
+		next_state = state_idle();
+		break;
+	default:
+		next_state = state_find();
+		break;
 	}
 
 }

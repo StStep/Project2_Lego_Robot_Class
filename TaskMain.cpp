@@ -35,11 +35,11 @@ TASK(TaskMain)
 		
 		if(bump == 1 )
 		{
-			TaskMainSM_inst->Touch();
+			TaskMainSM_inst.Touch();
 		}
 		else
 		{
-			TaskMainSM_inst->Run();
+			TaskMainSM_inst.Run();
 		}
 		
 		// Wait some time between iterations
