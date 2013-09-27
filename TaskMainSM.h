@@ -1,6 +1,25 @@
 #ifndef TASK_MAIN_SM_H
 #define TASK_MAIN_SM_H
 #include "StateMachine.h"
+#include "SensorSuite.h"
+#include "MotorSuite.h"
+
+
+//From Early Imp
+extern "C" 
+{
+typedef enum{INIT, FIND, ALIGN, STEP, ROTATE_ALIGN, IDLE} state_t;
+float baser = .3;
+float basel = .3;
+
+state_t state_init(void);
+state_t state_find(void);
+state_t state_align(void);
+state_t state_step(void);
+state_t state_rotate_align(void);
+state_t state_idle(void);
+
+}
  
 // the MainTask state machine class
 class TaskMainSM : public StateMachine

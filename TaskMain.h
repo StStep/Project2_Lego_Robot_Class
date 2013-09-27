@@ -1,15 +1,8 @@
 #ifndef _TaskMain_
 #define _TaskMain_
 
-// ECRobot++ API (http://lejos-osek.sourceforge.net/html/index.html)
-#include "LightSensor.h"
-#include "SonarSensor.h"
-#include "SoundSensor.h"
-#include "TouchSensor.h"
-#include "Clock.h"
-#include "Lcd.h"
-#include "Motor.h"
-#include "Nxt.h"
+#include "SensorSuite.h"
+#include "MotorSuite.h"
 
 //#include "test_object.h"
 #include "TaskMainSM.h"
@@ -56,7 +49,6 @@ extern "C" {
 //Overide Virtual Function call to reduce file size
 void __cxa_pure_virtual() { while(1); }
 
-
 #include "kernel.h"
 #include "kernel_id.h"
 #include "ecrobot_interface.h"
@@ -66,30 +58,10 @@ DeclareCounter(SysTimerCnt);
 DeclareTask(TaskMain); 
 DeclareTask(TaskRecord);
 
-//DeclareEvent(TouchSensorOnEvent); /* Event declaration */
-//DeclareEvent(TouchSensorOffEvent); /* Event declaration */
-
-// Initialize Sensors
-LightSensor  leftLight(PORT_1, true); // init light sensor ON
-LightSensor  rightLight(PORT_3, true);
-SonarSensor  sonar(PORT_2);
-TouchSensor  touch(PORT_4);
-
-// Initialize Actuators
-Motor steering(PORT_A);
-Motor rightMotor(PORT_B);
-Motor leftMotor(PORT_C);
-
-// Initialize Clock
-Clock clock;
-
 // Initialize LCD
 Lcd lcd;
 
 int PublixTest = 0;	
-
-//Initialize Test Object
-//test_object *FlowerPower1;
 
 TaskMainSM *TaskMainSM_inst;
 
