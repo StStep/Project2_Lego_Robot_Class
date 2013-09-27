@@ -12,14 +12,24 @@
 
 using namespace ecrobot;
 
-extern "C" {
+//Light Sensor Stuff
+// values for colored tape
+#define WHITEHIGH 600
+#define WHITELOW 540
+#define BLACKHIGH 385
+#define BLACKLOW 325
+
+//typedef enum{BLACK, GREY, WHITE} Color;
+
+extern "C" 
+{
 
 // Initialize Clock
 Clock clock;
 
 // Initialize Sensors
-LightSensor  leftLight(PORT_1, true); // init light sensor ON
-LightSensor  rightLight(PORT_3, true);
+LightSensor  leftLight(PORT_3, true); // init light sensor ON
+LightSensor  rightLight(PORT_1, true);
 SonarSensor  sonar(PORT_2);
 TouchSensor  touch(PORT_4);
 

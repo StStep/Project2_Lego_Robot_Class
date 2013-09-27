@@ -6,6 +6,9 @@
 
 using namespace ecrobot;
 
+// Value for each motor to move full speed ahead
+#define FULLSPEED 100
+
 extern "C" {
 
 // Initialize Actuators

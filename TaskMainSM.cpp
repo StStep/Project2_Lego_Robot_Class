@@ -108,7 +108,7 @@ state_t state_find(void)
 	bright_l = leftLight.getBrightness(); // Left light sensor
 	bright_r = rightLight.getBrightness(); // Right light sensor
 	//while neither of the sensors have detected black tape, move forward
-	while(!((bright_l < BLACKHIGH & bright_l >BLACKLOW) || (bright_r < BLACKHIGH & bright_r >BLACKLOW)))
+	while(!((bright_l < BLACKHIGH && bright_l >BLACKLOW) || (bright_r < BLACKHIGH && bright_r >BLACKLOW)))
 	{
 		leftMotor.setPWM(baser*FULLSPEED); // Left motor forward
 		rightMotor.setPWM(basel*FULLSPEED); // Right motor forward
@@ -128,7 +128,7 @@ state_t state_align(void)
 	bright_r = rightLight.getBrightness(); // Right light sensor
 	//we want to align both sensors on the line to position 
 	//the robot if one sensor reaches before the other
-	while (bright_l < BLACKHIGH & bright_l >BLACKLOW)//while sensor L is alone on the track 
+	while (bright_l < BLACKHIGH && bright_l >BLACKLOW)//while sensor L is alone on the track 
 	{
 		basel = 0;
 		leftMotor.setPWM(basel*FULLSPEED); // Left motor forward
@@ -136,13 +136,13 @@ state_t state_align(void)
 		clock.wait(TIME); // Perform for duration of .1 seconds
 		bright_l = leftLight.getBrightness(); // Update
 		bright_r = rightLight.getBrightness(); 
-		if((bright_r < BLACKHIGH & bright_r >BLACKLOW))
+		if((bright_r < BLACKHIGH && bright_r >BLACKLOW))
 		{
 		baser = .3;
 		basel = .3;
 		return STEP;}
 	}
-	while (bright_r < BLACKHIGH & bright_r >BLACKLOW)//while sensor R is alone on the track 
+	while (bright_r < BLACKHIGH && bright_r >BLACKLOW)//while sensor R is alone on the track 
 	{
 		baser = 0;
 		leftMotor.setPWM(basel*FULLSPEED); // Left motor forward
@@ -164,7 +164,7 @@ state_t state_align(void)
 state_t state_step(void)
 {
 	//while either sensor is still on black tape
-	while(((bright_l < BLACKHIGH & bright_l >BLACKLOW) || (bright_r < BLACKHIGH & bright_r >BLACKLOW)))
+	while(((bright_l < BLACKHIGH && bright_l >BLACKLOW) || (bright_r < BLACKHIGH && bright_r >BLACKLOW)))
 	{
 	//goforward
 		leftMotor.setPWM(baser*FULLSPEED); // Left motor forward
@@ -187,7 +187,7 @@ state_t state_rotate_align(void)
 		clock.wait(TIME); // Perform for duration of .1 seconds}
 		bright_l = leftLight.getBrightness(); // Update
 		bright_r = rightLight.getBrightness(); 
-		if ((bright_l < BLACKHIGH & bright_l >BLACKLOW)) //when black tape first seen by left
+		if ((bright_l < BLACKHIGH && bright_l >BLACKLOW)) //when black tape first seen by left
 		{
 			tape_flag = 1;
 		}
@@ -200,7 +200,7 @@ state_t state_rotate_align(void)
 		clock.wait(TIME); // Perform for duration of .1 seconds}
 		bright_l = leftLight.getBrightness(); // Update
 		bright_r = rightLight.getBrightness(); 
-		if (!(bright_l < BLACKHIGH & bright_l >BLACKLOW)) //when black tape first seen by right
+		if (!(bright_l < BLACKHIGH && bright_l >BLACKLOW)) //when left no longer on black
 		{
 			return IDLE;
 		}

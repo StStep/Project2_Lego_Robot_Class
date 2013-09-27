@@ -1,21 +1,13 @@
 #ifndef TASK_MAIN_SM_H
 #define TASK_MAIN_SM_H
+
 #include "StateMachine.h"
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 
 //First Imp  of Find #defines
 
-// Value for each motor to move full speed ahead
-#define FULLSPEED 100
 #define TIME 100
-
-// values for colored tape
-#define WHITEHIGH 600
-#define WHITELOW 540
-#define BLACKHIGH 385
-#define BLACKLOW 325
-
 
 //From Early Imp
 extern "C" 

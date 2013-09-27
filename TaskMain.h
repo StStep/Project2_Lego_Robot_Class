@@ -14,9 +14,6 @@ using namespace ecrobot;
 // Encoder value for the robot to be facing straight forward
 #define CENTER 60
 
-// Value for each motor to move full speed ahead
-#define FULLSPEED -100
-
 // Various operational states
 #define FWD_MODE  0
 #define SCAN_MODE 1
