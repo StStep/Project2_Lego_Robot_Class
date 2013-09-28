@@ -9,20 +9,15 @@
 //From Early Imp
 extern "C" 
 {
-typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} state_t;
 
-state_t state_init(void);
-state_t state_fwd_until_tan(void);
-// state_t state_find(void);
-// state_t state_align(void);
-state_t state_step(void);
-state_t state_rotate_align(void);
-state_t state_idle(void);
-
+/**Find State Declarations**/
+typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} FindSM_states;
+bool align(bool isLeftTrue, bool isRightTrue);
+FindSM_states state_rotate_align(void);
 //Silly globasl, fix later
-state_t next_state;
+FindSM_states next_state;
 int bright_l, bright_r;
-int tape_flag = 0;
+bool tape_flag = 0;
 
 }
  

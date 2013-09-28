@@ -60,32 +60,38 @@ void TaskMainSM::ST_Find()
 	bright_l = leftLight.getBrightness(); // Left light sensor
 	bright_r = rightLight.getBrightness(); // Right light sensor
 	
-	// LOCATION C: LOOP CODE
 	switch(next_state)
 	{
 	case INIT:
 		PrintPlease = 1;
-		next_state  = state_init();
+		next_state  = FWD_UNTIL_TAN;
 		break;
 	case FWD_UNTIL_TAN:
 		PrintPlease = 2;
-		next_state = state_fwd_until_tan();
+		if(align(isBlk(bright_l),isBlk(bright_l))) 
+			next_state = STEP;
+		else
+			next_state = FWD_UNTIL_TAN;
 		break;
 	case STEP:
 		PrintPlease = 3;
-		next_state = state_step();
+		if(align(isWht(bright_l),isWht(bright_l))) 
+			next_state = ROTATE_ALIGN;
+		else
+			next_state = STEP;
 		break;
 	case ROTATE_ALIGN:
 		PrintPlease = 4;
 		next_state = state_rotate_align();
 		break;
-	case IDLE:
-		PrintPlease = 0;
-		next_state = state_idle();
-		InternalEvent(ST_START);
-		break;
 	default:
-		next_state = state_init();
+		PrintPlease = 0;
+		next_state = IDLE;
+		
+		leftMotor.setPWM(0); // Left motor stop
+		rightMotor.setPWM(0); // Right motor stop
+		InternalEvent(ST_START);
+		next_state = INIT;
 		InternalEvent(ST_START);
 		break;
 	}
@@ -110,30 +116,25 @@ void TaskMainSM::ST_Idle()
 /** Find SM FUnctions for now **/
 extern "C" 
 {
-state_t state_init(void)
-{
-	return FWD_UNTIL_TAN;
-}
-
-state_t state_fwd_until_tan(void)
+bool align(bool isLeftTrue, bool isRightTrue)
 {
 	//Defualt return state
-	state_t ret =  FWD_UNTIL_TAN;
+	bool ret =  false;
 	
 	//Both on line, change states
-	if((isBlk(bright_l) && isBlk(bright_r)))
+	if(isLeftTrue && isRightTrue)
 	{
 		leftMotor.setPWM(NOSPEED); // Left motor stop
 		rightMotor.setPWM(NOSPEED); // Right motor stop
-		ret = STEP;
+		ret = true;
 	}
-	else if(isBlk(bright_r)) 
+	else if(isRightTrue) 
 	{
 		leftMotor.setPWM(BASESPEED); // Left motor fwd
 		rightMotor.setPWM(-HALFSPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
-	else if(isBlk(bright_l)) 
+	else if(isLeftTrue) 
 	{
 		leftMotor.setPWM(-HALFSPEED); // Left motor fwd
 		rightMotor.setPWM(BASESPEED); // Right motor stop
@@ -150,60 +151,24 @@ state_t state_fwd_until_tan(void)
 	
 }
 
-state_t state_step(void)
-{
-	
-	//Default return state
-	state_t ret =  STEP;
-	
-	//Both on line, change states
-	if((isWht(bright_l) && isWht(bright_r)))
-	{
-		leftMotor.setPWM(NOSPEED); // Left motor stop
-		rightMotor.setPWM(NOSPEED); // Right motor stop
-		ret = ROTATE_ALIGN;
-	}
-	else if(isWht(bright_r)) 
-	{
-		leftMotor.setPWM(BASESPEED); // Left motor fwd
-		rightMotor.setPWM(-HALFSPEED); // Right motor stop
-		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-	}
-	else if(isWht(bright_l)) 
-	{
-		leftMotor.setPWM(-HALFSPEED); // Left motor fwd
-		rightMotor.setPWM(BASESPEED); // Right motor stop
-		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-	}
-	else //while neither of the sensors have detected black tape, move forward
-	{
-		leftMotor.setPWM(BASESPEED); // Left motor forward
-		rightMotor.setPWM(BASESPEED); // Right motor forward
-		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-	}
-	
-	return ret;
-}
-
-
-state_t state_rotate_align(void)
+FindSM_states state_rotate_align(void)
 {
 
 	//Default return state
-	state_t ret =  ROTATE_ALIGN;
+	FindSM_states ret =  ROTATE_ALIGN;
 	
-	if(tape_flag == 0)
+	if(tape_flag == false)
 	{ 
 		if (isBlk(bright_l)) //when black tape first seen by left
 		{
-			tape_flag = 1;
+			tape_flag = true;
 		}
 	}
-	else if(tape_flag == 1)
+	else if(tape_flag == true)
 	{
 		if (!(isBlk(bright_l)) || isBlk(bright_r)) //when left no longer on black
 		{
-			tape_flag = 0;
+			tape_flag = false;
 			ret = IDLE;
 		}
 	}
@@ -214,21 +179,9 @@ state_t state_rotate_align(void)
 		rightMotor.setPWM(BASESPEED); // Right motor backwards
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
-	//bright_l = leftLight.getBrightness(); // Update light data
-	//bright_r = rightLight.getBrightness();
-
 	
 	return ret;
 
-}
-
-state_t state_idle(void)
-{
-	
-	leftMotor.setPWM(0); // Left motor forward
-	rightMotor.setPWM(0); // Right motor forward
-		
-	return IDLE;
 }
 
 /** Track SM FUnctions for now **/
