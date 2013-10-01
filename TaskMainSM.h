@@ -19,6 +19,20 @@ FindSM_states next_state;
 int bright_l, bright_r;
 bool tape_flag = 0;
 
+/** Track State Declarations **/
+typedef enum{CRUISE, CORNERTURNLEFT, CORNERTURNRIGHT, ALIGNGREY, WAYPOINT} state_tt;
+float rfix = 1.00;
+float lfix = 1.00;
+int greychecker = 0;
+//track functions
+state_tt state_cruise(void);
+state_tt state_corner_turn_left(void);
+state_tt state_corner_turn_right(void);
+state_tt state_align_grey(void);
+state_tt state_waypoint(void);
+//Silly Global
+state_tt next_state_tt;
+
 }
  
 // the MainTask state machine class

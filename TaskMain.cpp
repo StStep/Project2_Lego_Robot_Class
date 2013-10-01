@@ -27,9 +27,9 @@ TASK(TaskMain)
 		lcd.clear(); // Clear the current LCD display
 		lcd.putf("sn", "NXT Sensors");
 		lcd.putf("sddn", "Light: ", bright_l,0,bright_r,5);
-		lcd.putf("sdn", "Dist: ", dist, 0); // In centimeters
 		lcd.putf("sdn", "Bump: ", bump,0); // Binary
-		lcd.putf("sdn", "Steer: ", steer_count,0); // In degrees
+		lcd.putf("sdn", "rfix:", (int) (rfix*100.0),0);
+		lcd.putf("sdn", " lfix:",(int) (lfix*100.0),0);
 		lcd.putf("sdn", "In State = ", PrintPlease, 0); // In flowers
         lcd.disp(); // Update the LCD display
 		
