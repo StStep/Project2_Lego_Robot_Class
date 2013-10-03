@@ -13,8 +13,8 @@ using namespace ecrobot;
 #define NOSPEED 0
 
 //Values for SPeed Multipliers
-#define MAX_SP_MULT 2
-#define DFLT_SP_MULT 1
+#define MAX_SP_MULT 2.0
+#define DFLT_SP_MULT 1.0
 
 
 #define MOTORTIMESTEP 50

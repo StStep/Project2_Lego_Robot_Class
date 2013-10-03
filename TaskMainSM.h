@@ -11,27 +11,27 @@ extern "C"
 {
 
 /**Find State Declarations**/
-typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} FindSM_states;
+typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} FindSM_state;
 bool align(bool isLeftTrue, bool isRightTrue);
-FindSM_states state_rotate_align(void);
+FindSM_state FS_rotate_align(void);
 //Silly globasl, fix later
-FindSM_states next_state;
+FindSM_state Find_Next_State;
 int bright_l, bright_r;
 bool tape_flag = 0;
 
 /** Track State Declarations **/
-typedef enum{CRUISE, CORNERTURNLEFT, CORNERTURNRIGHT, ALIGNGREY, WAYPOINT} state_tt;
-float rfix = 1.00;
-float lfix = 1.00;
-int greychecker = 0;
+typedef enum{CRUISE, CORNERTURNLEFT, CORNERTURNRIGHT, ALIGNGREY, WAYPOINT} TrackSM_state;
+float RMMult = 1.00;
+float LMMult = 1.00;
+int GryCnt = 0;
 //track functions
-state_tt state_cruise(void);
-state_tt state_corner_turn_left(void);
-state_tt state_corner_turn_right(void);
-state_tt state_align_grey(void);
-state_tt state_waypoint(void);
+TrackSM_state TS_cruise(void);
+TrackSM_state TS_corner_turn_left(void);
+TrackSM_state TS_corner_turn_right(void);
+TrackSM_state TS_align_grey(void);
+TrackSM_state TS_waypoint(void);
 //Silly Global
-state_tt next_state_tt;
+TrackSM_state Track_Next_State;
 
 }
  

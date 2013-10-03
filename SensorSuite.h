@@ -21,7 +21,7 @@ using namespace ecrobot;
 #define BLACKHIGH 420
 #define BLACKLOW 225
 
-#define GREYCOUNTTHRESHOLD 2
+#define GRY_CNT_THRESH 2
 
 //Light Sensor Defines
 #define isBlk(x) (x < BLACKHIGH && x >BLACKLOW)

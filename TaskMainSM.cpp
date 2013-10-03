@@ -49,7 +49,7 @@ void TaskMainSM::Reset(void)
 void TaskMainSM::ST_Start() 
 {
 	//Remove Later
-	next_state = INIT;
+	Find_Next_State = INIT;
 
 }
 
@@ -60,32 +60,32 @@ void TaskMainSM::ST_Find()
 	bright_l = leftLight.getBrightness(); // Left light sensor
 	bright_r = rightLight.getBrightness(); // Right light sensor
 
-	switch(next_state)
+	switch(Find_Next_State)
 	{
 	case INIT:
 		PrintPlease = 1;
-		next_state  = FWD_UNTIL_TAN;
+		Find_Next_State  = FWD_UNTIL_TAN;
 		break;
 	case FWD_UNTIL_TAN:
 		PrintPlease = 2;
 		if(align(isBlk(bright_l),isBlk(bright_r))) 
-			next_state = STEP;
+			Find_Next_State = STEP;
 		else
-			next_state = FWD_UNTIL_TAN;
+			Find_Next_State = FWD_UNTIL_TAN;
 		break;
 	case STEP:
 		PrintPlease = 3;
 		if(align(isWht(bright_l),isWht(bright_r))) 
-			next_state = ROTATE_ALIGN;
+			Find_Next_State = ROTATE_ALIGN;
 		else
-			next_state = STEP;
+			Find_Next_State = STEP;
 		break;
 	case ROTATE_ALIGN:
 		PrintPlease = 4;
-		next_state = state_rotate_align();
+		Find_Next_State = FS_rotate_align();
 		break;
 	default:
-		next_state = INIT;
+		Find_Next_State = INIT;
 		PrintPlease = 0;
 
 		leftMotor.setPWM(0); // Left motor stop
@@ -104,36 +104,35 @@ void TaskMainSM::ST_Find()
 void TaskMainSM::ST_Track()
 {
 
-	//editing begins 9/29
 	//Sensor Input
 	bright_l = leftLight.getBrightness(); // Left light sensor
 	bright_r = rightLight.getBrightness(); // Right light sensor
 	
 	// LOCATION C: LOOP CODE
-	switch(next_state_tt)
+	switch(Track_Next_State)
 	{
 	case CRUISE:
 		PrintPlease = 5;
-		next_state_tt = state_cruise();
+		Track_Next_State = TS_cruise();
 		break;
 	case CORNERTURNLEFT:
 		PrintPlease = 6;
-		next_state_tt = state_corner_turn_left();
+		Track_Next_State = TS_corner_turn_left();
 		break;
 	case CORNERTURNRIGHT:
 		PrintPlease = 7;
-		next_state_tt = state_corner_turn_right();
+		Track_Next_State = TS_corner_turn_right();
 		break;
 	case ALIGNGREY:
 		PrintPlease = 8;
 		if(align(isGry(bright_l),isGry(bright_r))) 
-			next_state_tt = WAYPOINT;
+			Track_Next_State = WAYPOINT;
 		else
-			next_state_tt = ALIGNGREY;
+			Track_Next_State = ALIGNGREY;
 		break;
 	case WAYPOINT:
 		PrintPlease = 0;
-		next_state_tt = CRUISE;
+		Track_Next_State = CRUISE;
 		
 		leftMotor.setPWM(NOSPEED); // Left motor forward
 		rightMotor.setPWM(NOSPEED); // Right motor forward
@@ -141,7 +140,7 @@ void TaskMainSM::ST_Track()
 		InternalEvent(ST_IDLE);
 		break;
 	default:
-		next_state_tt = state_cruise();
+		Track_Next_State = CRUISE;
 		break;
 	}
 	//Jitter Mode Activate!
@@ -196,11 +195,11 @@ bool align(bool isLeftTrue, bool isRightTrue)
 
 }
 
-FindSM_states state_rotate_align(void)
+FindSM_state FS_rotate_align(void)
 {
 
 	//Default return state
-	FindSM_states ret =  ROTATE_ALIGN;
+	FindSM_state ret =  ROTATE_ALIGN;
 
 	if(tape_flag == false)
 	{ 
@@ -234,81 +233,81 @@ FindSM_states state_rotate_align(void)
 /**---------------------------------**/
 extern "C" 
 {
-	state_tt state_cruise(void)
+	TrackSM_state TS_cruise(void)
 	{
-		state_tt ret = CRUISE;
+		TrackSM_state ret = CRUISE;
 		
 		//Speed Multiplier Bounds
-		// if (lfix > MAX_SP_MULT)
-			// lfix = MAX_SP_MULT;
-		// else if (lfix < DFLT_SP_MULT)
-			// lfix = DFLT_SP_MULT;
+		// if (LMMult > MAX_SP_MULT)
+			// LMMult = MAX_SP_MULT;
+		// else if (LMMult < DFLT_SP_MULT)
+			// LMMult = DFLT_SP_MULT;
 		
 		if (isGry(bright_l) || isGry(bright_r))
 		{
-			greychecker +=1;
-			if (greychecker > GREYCOUNTTHRESHOLD)
+			GryCnt +=1;
+			if (GryCnt > GRY_CNT_THRESH)
 				{
-					greychecker = 0;
+					GryCnt = 0;
 					ret = ALIGNGREY;
 					
-					rfix = 0.0; //TESTING
-					lfix = 0.0; //TESTING
+					RMMult = 0.0; //TESTING
+					LMMult = 0.0; //TESTING
 				}
 		}		
-		else if (lfix > MAX_SP_MULT || rfix >MAX_SP_MULT)
+		else if (LMMult >= MAX_SP_MULT || RMMult >= MAX_SP_MULT)
 		{
-			greychecker = 0;
-			if (lfix > MAX_SP_MULT) 			//then sharp right turn
+			GryCnt = 0;
+			if (LMMult >= MAX_SP_MULT) 			//then sharp right turn
 			{
 				leftMotor.setPWM(NOSPEED); 
 				rightMotor.setPWM(NOSPEED); 
 				ret = WAYPOINT;//CORNERTURNRIGHT;
-				rfix = 0.0; //TESTING
-				lfix = 0.0; //TESTING
+				RMMult = 0.0; //TESTING
+				LMMult = 0.0; //TESTING
 			}
-			else if (rfix > MAX_SP_MULT)		//then sharp left turn
+			else if (RMMult >= MAX_SP_MULT)		//then sharp left turn
 			{
 				leftMotor.setPWM(NOSPEED); 
 				rightMotor.setPWM(NOSPEED); 
 				ret = WAYPOINT;//CORNERTURNLEFT; 
-				rfix = 0.0; //TESTING
-				lfix = 0.0; //TESTING
+				RMMult = 0.0; //TESTING
+				LMMult = 0.0; //TESTING
 			}
 		}
 		else if (isBlk(bright_r))
 		{
-			greychecker = 0;
-			lfix += .25;
-			rfix -= .1;
+			GryCnt = 0;
+			LMMult += .25;
+			RMMult -= .1;
 			
-			if (lfix > MAX_SP_MULT)
-				lfix = 2.1;
-			else if (lfix < DFLT_SP_MULT)
-				lfix = 1.0;
-			leftMotor.setPWM(lfix*BASESPEED); // Left motor forward
-			rightMotor.setPWM(-lfix*HALFSPEED); // Right motor zero
+			if (LMMult > MAX_SP_MULT)
+				LMMult = MAX_SP_MULT;
+			else if (LMMult < DFLT_SP_MULT)
+				LMMult = DFLT_SP_MULT;
+			leftMotor.setPWM(LMMult*BASESPEED); // Left motor forward
+			rightMotor.setPWM(-LMMult*HALFSPEED); // Right motor zero
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 		}
 		else if (isBlk(bright_l))
 		{	
-			greychecker = 0;
-			lfix -= .1;
-			rfix += .25;
+			GryCnt = 0;
+			LMMult -= .1;
+			RMMult += .25;
 			
-			if (rfix > 2.0)
-				rfix = 2.1;
-			else if(rfix<1.0)
-				rfix = 1.0;
-			leftMotor.setPWM(-lfix*HALFSPEED); // Left motor zero
-			rightMotor.setPWM(rfix*BASESPEED); // Right motor backwards
+			if (RMMult > MAX_SP_MULT)
+				RMMult = MAX_SP_MULT;
+			else if(RMMult<DFLT_SP_MULT)
+				RMMult = DFLT_SP_MULT;
+			leftMotor.setPWM(-LMMult*HALFSPEED); // Left motor zero
+			rightMotor.setPWM(RMMult*BASESPEED); // Right motor backwards
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 		}
 		else
 		{
-			greychecker = 0;
-			rfix = 1.0;
-			lfix = 1.0;
+			GryCnt = 0;
+			RMMult = DFLT_SP_MULT;
+			LMMult = DFLT_SP_MULT;
 			leftMotor.setPWM(BASESPEED); // Left motor forward
 			rightMotor.setPWM(BASESPEED); // Right motor forward
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
@@ -322,9 +321,9 @@ extern "C"
 		
 	}
 
-	state_tt state_corner_turn_left(void)
+	TrackSM_state TS_corner_turn_left(void)
 	{
-		state_tt ret = CORNERTURNLEFT;
+		TrackSM_state ret = CORNERTURNLEFT;
 		if (isBlk(bright_l))
 		{
 			leftMotor.setPWM(-2*BASESPEED); // Left motor forward
@@ -345,9 +344,9 @@ extern "C"
 		return ret;
 	}
 
-	state_tt state_corner_turn_right(void)
+	TrackSM_state TS_corner_turn_right(void)
 	{
-		state_tt ret = CORNERTURNRIGHT;
+		TrackSM_state ret = CORNERTURNRIGHT;
 		
 		if (isBlk(bright_r))
 		{
