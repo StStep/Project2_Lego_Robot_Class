@@ -7,6 +7,6 @@ BUILD_MODE = RXE_ONLY
 
 O_PATH ?= build
 
-include ../../../ecrobot/ecrobot++.mak
-#include /cygdrive/c/cygwin/nxtOSEK/ecrobot/ecrobot++.mak
+#include ../../../ecrobot/ecrobot++.mak
+include /cygdrive/c/cygwin/nxtOSEK/ecrobot/ecrobot++.mak
 

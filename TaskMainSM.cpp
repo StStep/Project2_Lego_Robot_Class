@@ -156,7 +156,9 @@ void TaskMainSM::ST_Idle()
 }
 
 
-/** Find SM FUnctions for now **/
+/**---------------------------------**/
+/** Find SM Functions for now **/
+/**--------------------------------**/
 extern "C" 
 {
 bool align(bool isLeftTrue, bool isRightTrue)
@@ -227,14 +229,20 @@ FindSM_states state_rotate_align(void)
 
 }
 
-/**----------------------------**/
+/**----------------------------------**/
 /** Track SM Functions for now **/
-/**----------------------------**/
+/**---------------------------------**/
 extern "C" 
 {
 	state_tt state_cruise(void)
 	{
 		state_tt ret = CRUISE;
+		
+		//Speed Multiplier Bounds
+		// if (lfix > MAX_SP_MULT)
+			// lfix = MAX_SP_MULT;
+		// else if (lfix < DFLT_SP_MULT)
+			// lfix = DFLT_SP_MULT;
 		
 		if (isGry(bright_l) || isGry(bright_r))
 		{
@@ -243,22 +251,29 @@ extern "C"
 				{
 					greychecker = 0;
 					ret = ALIGNGREY;
+					
+					rfix = 0.0; //TESTING
+					lfix = 0.0; //TESTING
 				}
 		}		
-		else if (lfix > 1.4 || rfix >1.4)
+		else if (lfix > MAX_SP_MULT || rfix >MAX_SP_MULT)
 		{
 			greychecker = 0;
-			if (lfix > 1.4) 			//then sharp right turn
+			if (lfix > MAX_SP_MULT) 			//then sharp right turn
 			{
-				leftMotor.setPWM(BASESPEED); 
-				rightMotor.setPWM(BASESPEED); 
+				leftMotor.setPWM(NOSPEED); 
+				rightMotor.setPWM(NOSPEED); 
 				ret = WAYPOINT;//CORNERTURNRIGHT;
+				rfix = 0.0; //TESTING
+				lfix = 0.0; //TESTING
 			}
-			else if (rfix > 1.4)		//then sharp left turn
+			else if (rfix > MAX_SP_MULT)		//then sharp left turn
 			{
-				leftMotor.setPWM(BASESPEED); 
-				rightMotor.setPWM(BASESPEED); 
+				leftMotor.setPWM(NOSPEED); 
+				rightMotor.setPWM(NOSPEED); 
 				ret = WAYPOINT;//CORNERTURNLEFT; 
+				rfix = 0.0; //TESTING
+				lfix = 0.0; //TESTING
 			}
 		}
 		else if (isBlk(bright_r))
@@ -267,12 +282,12 @@ extern "C"
 			lfix += .25;
 			rfix -= .1;
 			
-			if (lfix > 2.0)
+			if (lfix > MAX_SP_MULT)
 				lfix = 2.1;
-			else if (lfix <1.0)
+			else if (lfix < DFLT_SP_MULT)
 				lfix = 1.0;
 			leftMotor.setPWM(lfix*BASESPEED); // Left motor forward
-			rightMotor.setPWM(-BASESPEED); // Right motor zero
+			rightMotor.setPWM(-lfix*HALFSPEED); // Right motor zero
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 		}
 		else if (isBlk(bright_l))
@@ -285,7 +300,7 @@ extern "C"
 				rfix = 2.1;
 			else if(rfix<1.0)
 				rfix = 1.0;
-			leftMotor.setPWM(-BASESPEED); // Left motor zero
+			leftMotor.setPWM(-lfix*HALFSPEED); // Left motor zero
 			rightMotor.setPWM(rfix*BASESPEED); // Right motor backwards
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 		}
@@ -294,10 +309,14 @@ extern "C"
 			greychecker = 0;
 			rfix = 1.0;
 			lfix = 1.0;
-			leftMotor.setPWM(lfix*BASESPEED); // Left motor forward
-			rightMotor.setPWM(rfix*BASESPEED); // Right motor forward
+			leftMotor.setPWM(BASESPEED); // Left motor forward
+			rightMotor.setPWM(BASESPEED); // Right motor forward
 			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 		}
+		
+			
+		//Use Motors
+		
 
 		return ret;
 		

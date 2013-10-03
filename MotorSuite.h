@@ -12,6 +12,11 @@ using namespace ecrobot;
 #define HALFSPEED 15
 #define NOSPEED 0
 
+//Values for SPeed Multipliers
+#define MAX_SP_MULT 2
+#define DFLT_SP_MULT 1
+
+
 #define MOTORTIMESTEP 50
 
 extern "C" {
