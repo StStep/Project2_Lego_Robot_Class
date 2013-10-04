@@ -10,6 +10,7 @@ using namespace ecrobot;
 #define FULLSPEED 100
 #define BASESPEED 30
 #define HALFSPEED 15
+#define QUARTSPEED 15
 #define NOSPEED 0
 
 //Values for SPeed Multipliers

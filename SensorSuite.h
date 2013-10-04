@@ -15,13 +15,13 @@ using namespace ecrobot;
 //Light Sensor Stuff
 // values for colored tape
 #define WHITEHIGH 700
-#define WHITELOW 540
-#define GREYHIGH 510
-#define GREYLOW 430
+#define WHITELOW 550
+#define GREYHIGH 540
+#define GREYLOW 450
 #define BLACKHIGH 420
-#define BLACKLOW 225
+#define BLACKLOW 0
 
-#define GRY_CNT_THRESH 2
+#define GRY_CNT_THRESH 4
 
 //Light Sensor Defines
 #define isBlk(x) (x < BLACKHIGH && x >BLACKLOW)
