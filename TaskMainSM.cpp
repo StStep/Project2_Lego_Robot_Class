@@ -88,9 +88,6 @@ void TaskMainSM::ST_Find(LightData* lData)
 		InternalEvent(ST_TRACK);
 		break;
 	}
-	
-	delete lData;
-
 }
  
 // Follow the line
@@ -167,9 +164,6 @@ void TaskMainSM::ST_Track(LightData* lData)
 		Track_Next_State =TS_CRUISE;
 		break;
 	}
-	
-	delete lData;
-
 }
  
 // Sit around and wait for touch event, at waypoint

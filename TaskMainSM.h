@@ -45,7 +45,7 @@ public:
     TaskMainSM() : StateMachine(ST_MAX_STATES) {}
  
     // external events taken by this state machine
-    void Touch();
+    void Touch(LightData*);
     void Run(LightData*);
 	void Reset();
 private:
