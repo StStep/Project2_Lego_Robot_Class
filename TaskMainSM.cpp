@@ -280,79 +280,79 @@ FindSM_state FS_rotate_align(void)
 /**----------------------------------**/
 /** Track SM Functions for now **/
 /**---------------------------------**/
-	TrackSM_state TS_cruise(void)
+TrackSM_state TS_cruise(void)
+{
+	
+	int LeftMot = 0;
+	int RightMot = 0;
+	
+	if (isGry(bright_l) || isGry(bright_r))
 	{
+		GryCnt +=1;
 		
-		int LeftMot = 0;
-		int RightMot = 0;
+		LeftMot = QUARTSPEED;
+		RightMot = QUARTSPEED;
+	}		
+	else if (isBlk(bright_r))
+	{
+		GryCnt = 0;
+		LMMult += .25;
+		//RMMult -= .1;
 		
-		if (isGry(bright_l) || isGry(bright_r))
-		{
-			GryCnt +=1;
-			
-			LeftMot = QUARTSPEED;
-			RightMot = QUARTSPEED;
-		}		
-		else if (isBlk(bright_r))
-		{
-			GryCnt = 0;
-			LMMult += .25;
-			//RMMult -= .1;
-			
-			LeftMot = (int) LMMult*BASESPEED; // Left motor forward
-			RightMot =(int)  -RMMult*HALFSPEED; // Right motor zero
-		}
-		else if (isBlk(bright_l))
-		{	
-			GryCnt = 0;
-			//LMMult -= .1;
-			RMMult += .25;
-
-			LeftMot = (int) -LMMult*HALFSPEED; // Left motor zero
-			RightMot = (int) RMMult*BASESPEED; // Right motor backwards
-		}
-		else
-		{
-			GryCnt = 0;
-			RMMult = DFLT_SP_MULT;
-			LMMult = DFLT_SP_MULT;
-			
-			LeftMot = (int) LMMult*BASESPEED; // Left motor zero
-			RightMot = (int) RMMult*BASESPEED; // Right motor backwards
-		}
-		
-		//State Transitions
-		TrackSM_state ret = TS_CRUISE;
-		if (GryCnt > GRY_CNT_THRESH)
-		{
-			GryCnt = 0;
-			ret = TS_ALIGN_GREY;
-		}
-		else if (GryCnt > GRY_CNT_THRESH/2)
-		{
-			//Maybe stopping and looking is a good idea?
-			//Perhaps once one passes a threshold of 2 ina row?
-			LeftMot = -QUARTSPEED;
-			RightMot = -QUARTSPEED;
-		}
-		
-		//Check Motor Thresholds
-		if(LeftMot > FULLSPEED)
-			LeftMot = FULLSPEED;
-		else if(LeftMot < -FULLSPEED)
-			LeftMot = -FULLSPEED;
-		if(RightMot > FULLSPEED)
-			RightMot = FULLSPEED;
-		else if(RightMot < -FULLSPEED)
-			RightMot = -FULLSPEED;
-		
-			
-		//Use Motors
-		leftMotor.setPWM(LeftMot); // Left motor forward
-		rightMotor.setPWM(RightMot); // Right motor forward
-		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-
-		return ret;
-		
+		LeftMot = (int) LMMult*BASESPEED; // Left motor forward
+		RightMot =(int)  -RMMult*HALFSPEED; // Right motor zero
 	}
-} //End Extren "C"
+	else if (isBlk(bright_l))
+	{	
+		GryCnt = 0;
+		//LMMult -= .1;
+		RMMult += .25;
+
+		LeftMot = (int) -LMMult*HALFSPEED; // Left motor zero
+		RightMot = (int) RMMult*BASESPEED; // Right motor backwards
+	}
+	else
+	{
+		GryCnt = 0;
+		RMMult = DFLT_SP_MULT;
+		LMMult = DFLT_SP_MULT;
+		
+		LeftMot = (int) LMMult*BASESPEED; // Left motor zero
+		RightMot = (int) RMMult*BASESPEED; // Right motor backwards
+	}
+	
+	//State Transitions
+	TrackSM_state ret = TS_CRUISE;
+	if (GryCnt > GRY_CNT_THRESH)
+	{
+		GryCnt = 0;
+		ret = TS_ALIGN_GREY;
+	}
+	else if (GryCnt > GRY_CNT_THRESH/2)
+	{
+		//Maybe stopping and looking is a good idea?
+		//Perhaps once one passes a threshold of 2 ina row?
+		LeftMot = -QUARTSPEED;
+		RightMot = -QUARTSPEED;
+	}
+	
+	//Check Motor Thresholds
+	if(LeftMot > FULLSPEED)
+		LeftMot = FULLSPEED;
+	else if(LeftMot < -FULLSPEED)
+		LeftMot = -FULLSPEED;
+	if(RightMot > FULLSPEED)
+		RightMot = FULLSPEED;
+	else if(RightMot < -FULLSPEED)
+		RightMot = -FULLSPEED;
+	
+		
+	//Use Motors
+	leftMotor.setPWM(LeftMot); // Left motor forward
+	rightMotor.setPWM(RightMot); // Right motor forward
+	clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
+
+	return ret;
+	
+}
+} //End Extren C

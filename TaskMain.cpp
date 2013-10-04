@@ -28,8 +28,9 @@ TASK(TaskMain)
 		lcd.putf("sn", "NXT Sensors");
 		lcd.putf("sddn", "Light: ", bright_l,0,bright_r,5);
 		lcd.putf("sdn", "Bump: ", bump,0); // Binary
-		lcd.putf("sdn", "rfix:", (int) (RMMult*100.0),0);
-		lcd.putf("sdn", " lfix:",(int) (LMMult*100.0),0);
+		lcd.putf("sdn", "RMMult:", (int) (RMMult*100.0),0);
+		lcd.putf("sdn", "LMMult:",(int) (LMMult*100.0),0);
+		lcd.putf("sdn", "Sine Test:", PublixTest, 0);
 		lcd.putf("sdn", "In State = ", PrintPlease, 0); // In flowers
         lcd.disp(); // Update the LCD display
 		

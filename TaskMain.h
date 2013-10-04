@@ -4,6 +4,7 @@
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 #include "LCDSuite.h"
+#include <math.h>
 
 
 //#include "test_object.h"
@@ -58,21 +59,18 @@ DeclareTask(TaskMain);
 DeclareTask(TaskRecord);
 
 int PublixTest = 0;	
+float PublixTestCnt = 0.0;	
 
 TaskMainSM TaskMainSM_inst;
 
 /* nxtOSEK hook on initilization */
 void ecrobot_device_initialize(void)
 {
-  //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
-  //TaskMainSM_inst = new TaskMainSM();
 }
 
 /* nxtOSEK hook on termination */
 void ecrobot_device_terminate(void)
 {
-  //nxt_motor_set_speed(NXT_PORT_A, 0, 1); 
-  //delete TaskMainSM_inst;
 }
 
 /* nxtOSEK hook to be invoked from an ISR in category 2 */
