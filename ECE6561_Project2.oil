@@ -21,10 +21,7 @@ CPU ATMEL_AT91SAM7S256
   /* Definition of TaskMain */
   TASK TaskMain
   {
-    AUTOSTART = TRUE
-    {
-      APPMODE = appmode1;
-    };
+    AUTOSTART = FALSE;
     PRIORITY = 1; /* lowest priority */
     ACTIVATION = 1;
     SCHEDULE = FULL;
@@ -61,6 +58,22 @@ CPU ATMEL_AT91SAM7S256
     TICKSPERBASE = 1; /* One tick is equal to 1msec */ 
   };
   
+  /* Definition of Display execution timing */
+  ALARM cyclic_alarmMain
+  {
+    COUNTER = SysTimerCnt;
+    ACTION = ACTIVATETASK
+    {
+      TASK = TaskMain;
+    };
+    AUTOSTART = TRUE
+    {
+      ALARMTIME = 1;
+      CYCLETIME = 200; /* TaskMainis executed every 200msec */
+      APPMODE = appmode1;
+    };
+  };
+  
   /* Definition of Record execution timing */
   ALARM cyclic_alarmRecord
   {
@@ -88,7 +101,7 @@ CPU ATMEL_AT91SAM7S256
     AUTOSTART = TRUE
     {
       ALARMTIME = 1;
-      CYCLETIME = 250; /* TaskDisplay is executed every 500msec */
+      CYCLETIME = 250; /* TaskDisplay is executed every 250msec */
       APPMODE = appmode1;
     };
   };
