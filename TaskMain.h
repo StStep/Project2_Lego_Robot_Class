@@ -4,6 +4,8 @@
 #include <math.h>
 #include "SensorSuite.h"
 #include "MotorSuite.h"
+#include "LCDSuite.h"
+#include "BTSuite.h"
 #include "TaskMainSM.h"
 
 using namespace ecrobot;
@@ -41,6 +43,7 @@ void __cxa_pure_virtual() { while(1); }
 DeclareCounter(SysTimerCnt);
 DeclareTask(TaskMain); 
 DeclareTask(TaskRecord);
+DeclareTask(TaskBTConnect);
 DeclareTask(TaskDisplay);
 
 /* State Machine Initionization */

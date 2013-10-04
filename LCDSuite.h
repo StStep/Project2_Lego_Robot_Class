@@ -7,8 +7,6 @@
 
 using namespace ecrobot;
 
-
-
 extern "C" {
 
 // Initialize LCD

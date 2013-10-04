@@ -50,6 +50,19 @@ CPU ATMEL_AT91SAM7S256
     STACKSIZE = 512; /* Stack size */ 
   };
   
+   /* Definition of Record */
+  TASK TaskBTConnect
+  {
+    AUTOSTART = TRUE
+	{
+		APPMODE = appmode1;
+	};
+    PRIORITY = 4;
+    ACTIVATION = 1;
+    SCHEDULE = NON;
+    STACKSIZE = 512; /* Stack size */ 
+  };
+  
   /* Definition of OSEK Alarm Counter */
   COUNTER SysTimerCnt
   {
