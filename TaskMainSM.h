@@ -12,7 +12,7 @@ extern "C"
 
 /**Find State Declarations**/
 typedef enum{INIT, FWD_UNTIL_TAN, STEP, ROTATE_ALIGN, IDLE} FindSM_state;
-bool align(bool isLeftTrue, bool isRightTrue);
+bool align(bool isLeftTrue, bool isRightTrue, float Mult);
 FindSM_state FS_rotate_align(void);
 //Silly globasl, fix later
 FindSM_state Find_Next_State;
@@ -20,7 +20,9 @@ int bright_l, bright_r;
 bool tape_flag = 0;
 
 /** Track State Declarations **/
-typedef enum{CRUISE, ALIGN_GREY, ALIGN_WHITE, WAYPOINT} TrackSM_state;
+typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_STEP2, 
+									   TS_ALIGN_GREY2, TS_STEP3, TS_ALIGN_GREY_RV2,
+									   TS_WAYPOINT, TS_STEP4} TrackSM_state;
 float RMMult = 1.00;
 float LMMult = 1.00;
 int GryCnt = 0;

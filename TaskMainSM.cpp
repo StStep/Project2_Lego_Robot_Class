@@ -68,14 +68,14 @@ void TaskMainSM::ST_Find()
 		break;
 	case FWD_UNTIL_TAN:
 		PrintPlease = 2;
-		if(align(isBlk(bright_l),isBlk(bright_r))) 
+		if(align(isBlk(bright_l),isBlk(bright_r),DFLT_SP_MULT)) 
 			Find_Next_State = STEP;
 		else
 			Find_Next_State = FWD_UNTIL_TAN;
 		break;
 	case STEP:
 		PrintPlease = 3;
-		if(align(isWht(bright_l),isWht(bright_r))) 
+		if(align(isWht(bright_l),isWht(bright_r),DFLT_SP_MULT)) 
 			Find_Next_State = ROTATE_ALIGN;
 		else
 			Find_Next_State = STEP;
@@ -110,35 +110,85 @@ void TaskMainSM::ST_Track()
 	
 	switch(Track_Next_State)
 	{
-	case CRUISE:
+	case TS_CRUISE:
 		PrintPlease = 5;
 		Track_Next_State = TS_cruise();
 		break;
-	case ALIGN_GREY:
+	case TS_ALIGN_GREY:
 		PrintPlease = 6;
-		if(align(isGry(bright_l),isGry(bright_r))) 
-			Track_Next_State = ALIGN_WHITE;
+		if(align(isGry(bright_l),isGry(bright_r), DFLT_SP_MULT)) 
+			Track_Next_State = TS_STEP;
 		else
-			Track_Next_State = ALIGN_GREY;
+			Track_Next_State = TS_ALIGN_GREY;
 		break;
-	case ALIGN_WHITE:
+	case TS_STEP:
 		PrintPlease = 7;
-		if(align(isWht(bright_l),isWht(bright_r))) 
-			Track_Next_State = WAYPOINT;
-		else
-			Track_Next_State = ALIGN_WHITE;
+		
+		leftMotor.setPWM(BASESPEED); // Left motor forward
+		rightMotor.setPWM(BASESPEED); // Right motor backwards
+		clock.wait(MOTORTIMESTEP*5); // Perform for duration of .1 seconds
+		
+		Track_Next_State =TS_ALIGN_GREY_RV;
 		break;
-	case WAYPOINT:
+	case TS_ALIGN_GREY_RV:
+		PrintPlease = 8;
+		if(align(isGry(bright_l),isGry(bright_r), -DFLT_SP_MULT)) 
+			Track_Next_State = TS_STEP2;
+		else
+			Track_Next_State = TS_ALIGN_GREY_RV;
+		break;
+	case TS_STEP2:
+		PrintPlease = 7;
+		
+		leftMotor.setPWM(BASESPEED); // Left motor forward
+		rightMotor.setPWM(BASESPEED); // Right motor backwards
+		clock.wait(MOTORTIMESTEP*10); // Perform for duration of .1 seconds
+		
+		Track_Next_State =TS_ALIGN_GREY2;
+		break;
+	case TS_ALIGN_GREY2:
+		PrintPlease = 6;
+		if(align(isGry(bright_l),isGry(bright_r), DFLT_SP_MULT)) 
+			Track_Next_State = TS_STEP3;
+		else
+			Track_Next_State = TS_ALIGN_GREY2;
+		break;
+	case TS_STEP3:
+		PrintPlease = 7;
+		
+		leftMotor.setPWM(BASESPEED); // Left motor forward
+		rightMotor.setPWM(BASESPEED); // Right motor backwards
+		clock.wait(MOTORTIMESTEP*5); // Perform for duration of .1 seconds
+		
+		Track_Next_State =TS_ALIGN_GREY_RV2;
+		break;
+	case TS_ALIGN_GREY_RV2:
+		PrintPlease = 8;
+		if(align(isGry(bright_l),isGry(bright_r), -DFLT_SP_MULT)) 
+			Track_Next_State = TS_WAYPOINT;
+		else
+			Track_Next_State = TS_ALIGN_GREY_RV2;
+		break;
+	case TS_WAYPOINT:
 		PrintPlease = 0;
-		Track_Next_State = CRUISE;
+		Track_Next_State = TS_STEP4;
 		
 		leftMotor.setPWM(NOSPEED); // Left motor forward
 		rightMotor.setPWM(NOSPEED); // Right motor forward
 		
 		InternalEvent(ST_IDLE);
 		break;
+	case TS_STEP4:
+		PrintPlease = 7;
+		
+		leftMotor.setPWM(BASESPEED); // Left motor forward
+		rightMotor.setPWM(BASESPEED); // Right motor backwards
+		clock.wait(MOTORTIMESTEP*5); // Perform for duration of .1 seconds
+		
+		Track_Next_State = TS_CRUISE;
+		break;
 	default:
-		Track_Next_State = CRUISE;
+		Track_Next_State =TS_CRUISE;
 		break;
 	}
 	//Jitter Mode Activate!
@@ -159,7 +209,7 @@ extern "C"
 /** Find SM Functions for now **/
 /**--------------------------------**/
 
-bool align(bool isLeftTrue, bool isRightTrue)
+bool align(bool isLeftTrue, bool isRightTrue, float Mult)
 {
 	//Defualt return state
 	bool ret =  false;
@@ -173,20 +223,20 @@ bool align(bool isLeftTrue, bool isRightTrue)
 	}
 	else if(isRightTrue) 
 	{
-		leftMotor.setPWM(BASESPEED); // Left motor fwd
-		rightMotor.setPWM(-HALFSPEED); // Right motor stop
+		leftMotor.setPWM((int) Mult*BASESPEED); // Left motor fwd
+		rightMotor.setPWM(-(int) Mult*HALFSPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
 	else if(isLeftTrue) 
 	{
-		leftMotor.setPWM(-HALFSPEED); // Left motor fwd
-		rightMotor.setPWM(BASESPEED); // Right motor stop
+		leftMotor.setPWM(-(int) Mult*HALFSPEED); // Left motor fwd
+		rightMotor.setPWM((int) Mult*BASESPEED); // Right motor stop
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
 	else //while neither of the sensors have detected black tape, move forward
 	{
-		leftMotor.setPWM(BASESPEED); // Left motor forward
-		rightMotor.setPWM(BASESPEED); // Right motor forward
+		leftMotor.setPWM((int) Mult*BASESPEED); // Left motor forward
+		rightMotor.setPWM((int) Mult*BASESPEED); // Right motor forward
 		clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
 	}
 
@@ -272,11 +322,11 @@ FindSM_state FS_rotate_align(void)
 		}
 		
 		//State Transitions
-		TrackSM_state ret = CRUISE;
+		TrackSM_state ret = TS_CRUISE;
 		if (GryCnt > GRY_CNT_THRESH)
 		{
 			GryCnt = 0;
-			ret = ALIGN_GREY;
+			ret = TS_ALIGN_GREY;
 		}
 		else if (GryCnt > GRY_CNT_THRESH/2)
 		{
