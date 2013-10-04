@@ -33,6 +33,7 @@ Motor leftMotor(PORT_C);
 
 //Function Declarations
 void MotorStep(int LeftPWM, int RightPWN, int TimeStep);
+bool align(bool isLeftTrue, bool isRightTrue, float Mult);
 
 } //End Extern C
 #endif 

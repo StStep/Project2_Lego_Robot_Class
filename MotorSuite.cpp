@@ -21,4 +21,32 @@ void MotorStep(int LeftPWM, int RightPWM, int TimeStep)
 	clock.wait(TimeStep); // Perform for duration of .1 seconds
 }
 
+bool align(bool isLeftTrue, bool isRightTrue, float Mult)
+{
+	//Defualt return state
+	bool ret =  false;
+
+	//Both on line, change states
+	if(isLeftTrue && isRightTrue)
+	{
+		MotorStep(NOSPEED, NOSPEED, 0);
+		ret = true;
+	}
+	else if(isRightTrue) 
+	{
+		MotorStep((int) Mult*BASESPEED, -(int) Mult*HALFSPEED, MOTORTIMESTEP);
+	}
+	else if(isLeftTrue) 
+	{
+		MotorStep(-(int) Mult*HALFSPEED, (int) Mult*BASESPEED, MOTORTIMESTEP);
+	}
+	else //while neither of the sensors have detected black tape, move forward
+	{
+		MotorStep((int) Mult*BASESPEED, (int) Mult*BASESPEED, MOTORTIMESTEP);
+	}
+
+	return ret;
+
+}
+
 } //End Extern C

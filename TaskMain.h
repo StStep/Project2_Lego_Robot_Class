@@ -43,7 +43,7 @@ DeclareTask(TaskMain);
 DeclareTask(TaskRecord);
 DeclareTask(TaskDisplay);
 
-/* State Machine Initionization */
+/* State Machine Initialization */
 TaskMainSM TaskMainSM_inst;
 
 /* nxtOSEK hook on initilization */
