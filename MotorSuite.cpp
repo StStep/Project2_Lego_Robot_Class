@@ -2,22 +2,22 @@
 
 extern "C" {
 
-void MotorStep(int LeftPWM, int RightPWN, int TimeStep)
+void MotorStep(int LeftPWM, int RightPWM, int TimeStep)
 {
-	int _LeftPWN = LeftPWM;
-	int _RightPWN = RightPWN;
+	int _LeftPWM = LeftPWM;
+	int _RightPWM = RightPWM;
 
 	if(_LeftPWM > FULLSPEED)
 		_LeftPWM = FULLSPEED;
 	else if(_LeftPWM < -FULLSPEED)
 		_LeftPWM = -FULLSPEED;
-	if(_RightPWN > FULLSPEED)
-		_RightPWN = FULLSPEED;
-	else if(_RightPWN < -FULLSPEED)
-		_RightPWN = -FULLSPEED;
+	if(_RightPWM > FULLSPEED)
+		_RightPWM = FULLSPEED;
+	else if(_RightPWM < -FULLSPEED)
+		_RightPWM = -FULLSPEED;
 	
 	leftMotor.setPWM(_LeftPWM); // Left motor forward
-	rightMotor.setPWM(_RightPWN); // Right motor forward
+	rightMotor.setPWM(_RightPWM); // Right motor forward
 	clock.wait(TimeStep); // Perform for duration of .1 seconds
 }
 
