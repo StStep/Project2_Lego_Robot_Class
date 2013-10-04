@@ -3,7 +3,6 @@
 
 #include "SensorSuite.h"
 #include "MotorSuite.h"
-#include "LCDSuite.h"
 #include <math.h>
 
 
@@ -57,6 +56,7 @@ void __cxa_pure_virtual() { while(1); }
 DeclareCounter(SysTimerCnt);
 DeclareTask(TaskMain); 
 DeclareTask(TaskRecord);
+DeclareTask(TaskDisplay);
 
 int PublixTest = 0;	
 float PublixTestCnt = 0.0;	

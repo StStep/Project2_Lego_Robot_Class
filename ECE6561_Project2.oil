@@ -37,6 +37,16 @@ CPU ATMEL_AT91SAM7S256
   TASK TaskRecord
   {
     AUTOSTART = FALSE;
+    PRIORITY = 3;
+    ACTIVATION = 1;
+    SCHEDULE = FULL;
+    STACKSIZE = 512; /* Stack size */ 
+  };
+  
+  /* Definition of Record */
+  TASK TaskDisplay
+  {
+    AUTOSTART = FALSE;
     PRIORITY = 2;
     ACTIVATION = 1;
     SCHEDULE = FULL;
@@ -63,6 +73,22 @@ CPU ATMEL_AT91SAM7S256
     {
       ALARMTIME = 1;
       CYCLETIME = 500; /* TaskRecord is executed every 500msec */
+      APPMODE = appmode1;
+    };
+  };
+  
+  /* Definition of Display execution timing */
+  ALARM cyclic_alarmDisplay
+  {
+    COUNTER = SysTimerCnt;
+    ACTION = ACTIVATETASK
+    {
+      TASK = TaskDisplay;
+    };
+    AUTOSTART = TRUE
+    {
+      ALARMTIME = 1;
+      CYCLETIME = 250; /* TaskDisplay is executed every 500msec */
       APPMODE = appmode1;
     };
   };
