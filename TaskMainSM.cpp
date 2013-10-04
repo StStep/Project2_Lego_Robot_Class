@@ -4,29 +4,29 @@
   /**External Event Transition Definitions**/
  
 // Trigger States waiting for a touch event
-void TaskMainSM::Touch(void)
+void TaskMainSM::Touch(LightData* lData)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      				// - Current State -
-		TRANSITION_MAP_ENTRY (ST_FIND)				  	// ST_Start
-        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Find
-        TRANSITION_MAP_ENTRY (EVENT_IGNORED)     // ST_Track
-        TRANSITION_MAP_ENTRY (ST_TRACK)              	// ST_Idle
-    END_TRANSITION_MAP(NULL)
+    BEGIN_TRANSITION_MAP                      	// - Current State -
+		TRANSITION_MAP_ENTRY (ST_FIND)				// ST_Start
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  		// ST_Find
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)     	// ST_Track
+        TRANSITION_MAP_ENTRY (ST_TRACK)             // ST_Idle
+    END_TRANSITION_MAP(lData)
 }
  
  //The general run call for SM
-void TaskMainSM::Run(void)
+void TaskMainSM::Run(LightData* lData)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      				// - Current State -
-		TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Start
-        TRANSITION_MAP_ENTRY (ST_FIND)  					// ST_Find
+    BEGIN_TRANSITION_MAP                      	// - Current State -
+		TRANSITION_MAP_ENTRY (EVENT_IGNORED)  		// ST_Start
+        TRANSITION_MAP_ENTRY (ST_FIND)  			// ST_Find
         TRANSITION_MAP_ENTRY (ST_TRACK)        		// ST_Track
-        TRANSITION_MAP_ENTRY (EVENT_IGNORED)     // ST_Idle
-    END_TRANSITION_MAP(NULL)
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)     	// ST_Idle
+    END_TRANSITION_MAP(lData)
 }
 
 //Go back to the Start state
@@ -34,11 +34,11 @@ void TaskMainSM::Reset(void)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      				// - Current State -
-		TRANSITION_MAP_ENTRY (ST_START)  				// ST_Start
-		TRANSITION_MAP_ENTRY (ST_START)  				// ST_Find
+    BEGIN_TRANSITION_MAP                      	// - Current State -
+		TRANSITION_MAP_ENTRY (ST_START)  			// ST_Start
+		TRANSITION_MAP_ENTRY (ST_START)  			// ST_Find
 		TRANSITION_MAP_ENTRY (ST_START)        		// ST_Track
-		TRANSITION_MAP_ENTRY (ST_START)              	// ST_Idle
+		TRANSITION_MAP_ENTRY (ST_START)            	// ST_Idle
     END_TRANSITION_MAP(NULL)
 }
  
@@ -48,17 +48,14 @@ void TaskMainSM::Reset(void)
 // SM starts here, and does initilizaing thing? or nothing
 void TaskMainSM::ST_Start() 
 {
-	//Remove Later
-	Find_Next_State = FS_INIT;
-
 }
 
 // SM attempts to find the line
-void TaskMainSM::ST_Find()
+void TaskMainSM::ST_Find(LightData* lData)
 {
 	//Sensor Input
-	bright_l = leftLight.getBrightness(); // Left light sensor
-	bright_r = rightLight.getBrightness(); // Right light sensor
+	int LeftLightSen = lData->LeftLightSen; // Left light sensor
+	int RightLightSen = lData->RightLightSen; // Right light sensor
 
 	switch(Find_Next_State)
 	{
@@ -68,14 +65,14 @@ void TaskMainSM::ST_Find()
 		break;
 	case FS_FWD_UNTIL_TAN:
 		PrintPlease = 2;
-		if(align(isBlk(bright_l),isBlk(bright_r),DFLT_SP_MULT)) 
+		if(align(isBlk(LeftLightSen),isBlk(RightLightSen),DFLT_SP_MULT)) 
 			Find_Next_State = FS_WHITE_ALIGN;
 		else
 			Find_Next_State = FS_FWD_UNTIL_TAN;
 		break;
 	case FS_WHITE_ALIGN:
 		PrintPlease = 3;
-		if(align(isWht(bright_l),isWht(bright_r),DFLT_SP_MULT)) 
+		if(align(isWht(LeftLightSen),isWht(RightLightSen),DFLT_SP_MULT)) 
 			Find_Next_State = FS_ROTATE_ALIGN;
 		else
 			Find_Next_State = FS_WHITE_ALIGN;
@@ -91,16 +88,18 @@ void TaskMainSM::ST_Find()
 		InternalEvent(ST_TRACK);
 		break;
 	}
+	
+	delete lData;
 
 }
  
 // Follow the line
-void TaskMainSM::ST_Track()
+void TaskMainSM::ST_Track(LightData* lData)
 {
 
 	//Sensor Input
-	bright_l = leftLight.getBrightness(); // Left light sensor
-	bright_r = rightLight.getBrightness(); // Right light sensor
+	int LeftLightSen = lData->LeftLightSen; // Left light sensor
+	int RightLightSen = lData->RightLightSen; // Right light sensor
 	
 	switch(Track_Next_State)
 	{
@@ -110,7 +109,7 @@ void TaskMainSM::ST_Track()
 		break;
 	case TS_ALIGN_GREY:
 		PrintPlease = 6;
-		if(align(isGry(bright_l),isGry(bright_r), DFLT_SP_MULT)) 
+		if(align(isGry(LeftLightSen),isGry(RightLightSen), DFLT_SP_MULT)) 
 			Track_Next_State = TS_STEP;
 		else
 			Track_Next_State = TS_ALIGN_GREY;
@@ -122,7 +121,7 @@ void TaskMainSM::ST_Track()
 		break;
 	case TS_ALIGN_GREY_RV:
 		PrintPlease = 8;
-		if(align(isGry(bright_l),isGry(bright_r), -DFLT_SP_MULT)) 
+		if(align(isGry(LeftLightSen),isGry(RightLightSen), -DFLT_SP_MULT)) 
 			Track_Next_State = TS_STEP2;
 		else
 			Track_Next_State = TS_ALIGN_GREY_RV;
@@ -134,7 +133,7 @@ void TaskMainSM::ST_Track()
 		break;
 	case TS_ALIGN_GREY2:
 		PrintPlease = 6;
-		if(align(isGry(bright_l),isGry(bright_r), DFLT_SP_MULT)) 
+		if(align(isGry(LeftLightSen),isGry(RightLightSen), DFLT_SP_MULT)) 
 			Track_Next_State = TS_STEP3;
 		else
 			Track_Next_State = TS_ALIGN_GREY2;
@@ -146,7 +145,7 @@ void TaskMainSM::ST_Track()
 		break;
 	case TS_ALIGN_GREY_RV2:
 		PrintPlease = 8;
-		if(align(isGry(bright_l),isGry(bright_r), -DFLT_SP_MULT)) 
+		if(align(isGry(LeftLightSen),isGry(RightLightSen), -DFLT_SP_MULT)) 
 			Track_Next_State = TS_WAYPOINT;
 		else
 			Track_Next_State = TS_ALIGN_GREY_RV2;
@@ -168,6 +167,8 @@ void TaskMainSM::ST_Track()
 		Track_Next_State =TS_CRUISE;
 		break;
 	}
+	
+	delete lData;
 
 }
  

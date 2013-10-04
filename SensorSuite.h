@@ -3,7 +3,7 @@
 
 // ECRobot++ API (http://lejos-osek.sourceforge.net/html/index.html)
 #include "LightSensor.h"
-#include "SonarSensor.h"
+//#include "SonarSensor.h"
 #include "SoundSensor.h"
 #include "TouchSensor.h"
 #include "Clock.h"
@@ -36,8 +36,13 @@ extern "C"
 // Initialize Sensors
 LightSensor  leftLight(PORT_3, true); // init light sensor ON
 LightSensor  rightLight(PORT_1, true);
-SonarSensor  sonar(PORT_2);
 TouchSensor  touch(PORT_4);
+//SonarSensor  sonar(PORT_2);
+
+//Function Declarations
+int GetLeftLightSen();
+int GetRightLightSen();
+int GetTouchSen();
 
 } //End Extern C
 #endif 

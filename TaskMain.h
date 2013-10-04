@@ -1,27 +1,12 @@
 #ifndef _TaskMain_
 #define _TaskMain_
 
+#include <math.h>
 #include "SensorSuite.h"
 #include "MotorSuite.h"
-#include <math.h>
-
-
-//#include "test_object.h"
 #include "TaskMainSM.h"
 
 using namespace ecrobot;
-
-// Encoder value for the robot to be facing straight forward
-#define CENTER 60
-
-// Various operational states
-#define FWD_MODE  0
-#define SCAN_MODE 1
-#define TURN_MODE 2
-#define REV_MODE  3
-
-// Time to wait (in milliseconds) between control updates
-#define MAIN_WAIT 200
 
 #include <new>
 #include <malloc.h>
@@ -58,9 +43,7 @@ DeclareTask(TaskMain);
 DeclareTask(TaskRecord);
 DeclareTask(TaskDisplay);
 
-int PublixTest = 0;	
-float PublixTestCnt = 0.0;	
-
+/* State Machine Initionization */
 TaskMainSM TaskMainSM_inst;
 
 /* nxtOSEK hook on initilization */

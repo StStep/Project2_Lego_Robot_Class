@@ -5,19 +5,23 @@ extern "C"
 {
 TASK(TaskMain)
 {	
-	int bump = touch.isPressed(); //TODO: FInd better way to do this
 	
-	if(bump == 1 )
+	// Read the Touch and Light Sensor
+	int Bump = GetTouchSen();
+	LightData* lData = new LightData;
+	lData->LeftLightSen = GetLeftLightSen();
+	lData->RightLightSen = GetRightLightSen();
+	
+	if(Bump == 1 )
 	{
-		TaskMainSM_inst.Touch();
+		TaskMainSM_inst.Touch(lData);
 	}
 	else
-	{
-		TaskMainSM_inst.Run();
+	{	
+		TaskMainSM_inst.Run(lData);
 	}
 	
 	TerminateTask();
 	
 } // End Task
-
 } // End Extern C

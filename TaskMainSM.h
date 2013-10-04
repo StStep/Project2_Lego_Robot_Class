@@ -2,21 +2,26 @@
 #define TASK_MAIN_SM_H
 
 #include "StateMachine.h"
-#include "SensorSuite.h"
 #include "MotorSuite.h"
-#include "LCDSuite.h"
 
 //From Early Imp
 extern "C" 
 {
 
+// structure to hold event data passed into state machine
+struct LightData : public EventData
+{
+    int LeftLightSen;
+    int RightLightSen;
+};
+
 /**Find State Declarations**/
 typedef enum{FS_INIT, FS_FWD_UNTIL_TAN, FS_WHITE_ALIGN, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
+//Find Function
 bool align(bool isLeftTrue, bool isRightTrue, float Mult);
 FindSM_state FS_rotate_align(void);
 //Silly globasl, fix later
 FindSM_state Find_Next_State;
-int bright_l, bright_r;
 bool tape_flag = 0;
 
 /** Track State Declarations **/
@@ -41,7 +46,7 @@ public:
  
     // external events taken by this state machine
     void Touch();
-    void Run();
+    void Run(LightData*);
 	void Reset();
 private:
     // state machine state functions
