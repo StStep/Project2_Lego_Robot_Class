@@ -2,6 +2,7 @@
 #define _MotorSuite_
 
 #include "Motor.h"
+#include "Clock.h"
 #include "Nxt.h"
 
 using namespace ecrobot;
@@ -22,10 +23,16 @@ using namespace ecrobot;
 
 extern "C" {
 
+// Initialize Clock
+Clock clock;
+
 // Initialize Actuators
 Motor steering(PORT_A);
 Motor rightMotor(PORT_B);
 Motor leftMotor(PORT_C);
+
+//Function Declarations
+void MotorStep(int LeftPWM, int RightPWN, int TimeStep);
 
 } //End Extern C
 #endif 

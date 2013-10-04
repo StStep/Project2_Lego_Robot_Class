@@ -33,9 +33,6 @@ using namespace ecrobot;
 extern "C" 
 {
 
-// Initialize Clock
-Clock clock;
-
 // Initialize Sensors
 LightSensor  leftLight(PORT_3, true); // init light sensor ON
 LightSensor  rightLight(PORT_1, true);
