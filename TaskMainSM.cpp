@@ -108,27 +108,25 @@ void TaskMainSM::ST_Track()
 	bright_l = leftLight.getBrightness(); // Left light sensor
 	bright_r = rightLight.getBrightness(); // Right light sensor
 	
-	// LOCATION C: LOOP CODE
 	switch(Track_Next_State)
 	{
 	case CRUISE:
 		PrintPlease = 5;
 		Track_Next_State = TS_cruise();
 		break;
-	case CORNERTURNLEFT:
+	case ALIGN_GREY:
 		PrintPlease = 6;
-		Track_Next_State = TS_corner_turn_left();
-		break;
-	case CORNERTURNRIGHT:
-		PrintPlease = 7;
-		Track_Next_State = TS_corner_turn_right();
-		break;
-	case ALIGNGREY:
-		PrintPlease = 8;
 		if(align(isGry(bright_l),isGry(bright_r))) 
+			Track_Next_State = ALIGN_WHITE;
+		else
+			Track_Next_State = ALIGN_GREY;
+		break;
+	case ALIGN_WHITE:
+		PrintPlease = 7;
+		if(align(isWht(bright_l),isWht(bright_r))) 
 			Track_Next_State = WAYPOINT;
 		else
-			Track_Next_State = ALIGNGREY;
+			Track_Next_State = ALIGN_WHITE;
 		break;
 	case WAYPOINT:
 		PrintPlease = 0;
@@ -154,12 +152,13 @@ void TaskMainSM::ST_Idle()
 {
 }
 
+extern "C" 
+{
 
 /**---------------------------------**/
 /** Find SM Functions for now **/
 /**--------------------------------**/
-extern "C" 
-{
+
 bool align(bool isLeftTrue, bool isRightTrue)
 {
 	//Defualt return state
@@ -231,8 +230,6 @@ FindSM_state FS_rotate_align(void)
 /**----------------------------------**/
 /** Track SM Functions for now **/
 /**---------------------------------**/
-extern "C" 
-{
 	TrackSM_state TS_cruise(void)
 	{
 		
@@ -279,7 +276,7 @@ extern "C"
 		if (GryCnt > GRY_CNT_THRESH)
 		{
 			GryCnt = 0;
-			ret = ALIGNGREY;
+			ret = ALIGN_GREY;
 		}
 		else if (GryCnt > GRY_CNT_THRESH/2)
 		{
@@ -308,51 +305,4 @@ extern "C"
 		return ret;
 		
 	}
-
-	TrackSM_state TS_corner_turn_left(void)
-	{
-		TrackSM_state ret = CORNERTURNLEFT;
-		if (isBlk(bright_l))
-		{
-			leftMotor.setPWM(-2*BASESPEED); // Left motor forward
-			rightMotor.setPWM(2*BASESPEED); // Right motor backwards
-			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-		}
-		// if (isBlk(bright_l) && isBlk(bright_r))
-		// {
-			// leftMotor.setPWM(-BASESPEED); // Left motor forward
-			// rightMotor.setPWM(3*BASESPEED); // Right motor backwards
-			// clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-		// }
-		
-		else if (isWht(bright_l) && isWht(bright_r))
-		{
-			ret = CRUISE;
-		}
-		return ret;
-	}
-
-	TrackSM_state TS_corner_turn_right(void)
-	{
-		TrackSM_state ret = CORNERTURNRIGHT;
-		
-		if (isBlk(bright_r))
-		{
-			leftMotor.setPWM(2*BASESPEED); // Left motor forward
-			rightMotor.setPWM(-2*BASESPEED); // Right motor backwards
-			clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-		}
-		// if (isBlk(bright_l) && isBlk(bright_r))
-		// {
-			// leftMotor.setPWM(3*BASESPEED); // Left motor forward
-			// rightMotor.setPWM(-BASESPEED); // Right motor backwards
-			// clock.wait(MOTORTIMESTEP); // Perform for duration of .1 seconds
-		// }
-		else if (isWht(bright_l) && isWht(bright_r))
-		{
-			ret = CRUISE;
-		}
-		return ret;
-	}
-}
-}
+} //End Extren "C"

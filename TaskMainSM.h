@@ -20,16 +20,12 @@ int bright_l, bright_r;
 bool tape_flag = 0;
 
 /** Track State Declarations **/
-typedef enum{CRUISE, CORNERTURNLEFT, CORNERTURNRIGHT, ALIGNGREY, WAYPOINT} TrackSM_state;
+typedef enum{CRUISE, ALIGN_GREY, ALIGN_WHITE, WAYPOINT} TrackSM_state;
 float RMMult = 1.00;
 float LMMult = 1.00;
 int GryCnt = 0;
 //track functions
 TrackSM_state TS_cruise(void);
-TrackSM_state TS_corner_turn_left(void);
-TrackSM_state TS_corner_turn_right(void);
-TrackSM_state TS_align_grey(void);
-TrackSM_state TS_waypoint(void);
 //Silly Global
 TrackSM_state Track_Next_State;
 
