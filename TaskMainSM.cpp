@@ -79,7 +79,7 @@ void TaskMainSM::ST_Find(LightData* lData)
 		break;
 	case FS_ROTATE_ALIGN:
 		PrintPlease = 4;
-		Find_Next_State = FS_rotate_align();
+		Find_Next_State = FS_rotate_align(LeftLightSen, RightLightSen);
 		break;
 	default:
 		Find_Next_State = FS_INIT;
@@ -102,7 +102,7 @@ void TaskMainSM::ST_Track(LightData* lData)
 	{
 	case TS_CRUISE:
 		PrintPlease = 5;
-		Track_Next_State = TS_cruise();
+		Track_Next_State = TS_cruise(LeftLightSen, RightLightSen);
 		break;
 	case TS_ALIGN_GREY:
 		PrintPlease = 6;
@@ -206,7 +206,7 @@ bool align(bool isLeftTrue, bool isRightTrue, float Mult)
 
 }
 
-FindSM_state FS_rotate_align(void)
+FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen)
 {
 
 	//Default return state
@@ -214,14 +214,14 @@ FindSM_state FS_rotate_align(void)
 
 	if(tape_flag == false)
 	{ 
-		if (isBlk(bright_l)) //when black tape first seen by left
+		if (isBlk(LeftLightSen)) //when black tape first seen by left
 		{
 			tape_flag = true;
 		}
 	}
 	else if(tape_flag == true)
 	{
-		if (!(isBlk(bright_l)) || isBlk(bright_r)) //when left no longer on black
+		if (!(isBlk(LeftLightSen)) || isBlk(RightLightSen)) //when left no longer on black
 		{
 			tape_flag = false;
 			ret = FS_IDLE;
@@ -240,20 +240,20 @@ FindSM_state FS_rotate_align(void)
 /**----------------------------------**/
 /** Track SM Functions for now **/
 /**---------------------------------**/
-TrackSM_state TS_cruise(void)
+TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 {
 	
 	int LeftMot = 0;
 	int RightMot = 0;
 	
-	if (isGry(bright_l) || isGry(bright_r))
+	if (isGry(LeftLightSen) || isGry(RightLightSen))
 	{
 		GryCnt +=1;
 		
 		LeftMot = HALFSPEED;//QUARTSPEED;
 		RightMot = HALFSPEED;//QUARTSPEED;
 	}		
-	else if (isBlk(bright_r))
+	else if (isBlk(RightLightSen))
 	{
 		GryCnt = 0;
 		LMMult += .25;
@@ -262,7 +262,7 @@ TrackSM_state TS_cruise(void)
 		LeftMot = (int) LMMult*BASESPEED; // Left motor forward
 		RightMot =(int)  -RMMult*HALFSPEED; // Right motor zero
 	}
-	else if (isBlk(bright_l))
+	else if (isBlk(LeftLightSen))
 	{	
 		GryCnt = 0;
 		//LMMult -= .1;
