@@ -49,7 +49,7 @@ void TaskMainSM::Reset(void)
 void TaskMainSM::ST_Start() 
 {
 	//Remove Later
-	Find_Next_State = INIT;
+	Find_Next_State = FS_INIT;
 
 }
 
