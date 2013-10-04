@@ -69,16 +69,16 @@ void TaskMainSM::ST_Find()
 	case FS_FWD_UNTIL_TAN:
 		PrintPlease = 2;
 		if(align(isBlk(bright_l),isBlk(bright_r),DFLT_SP_MULT)) 
-			Find_Next_State = FS_White_Align;
+			Find_Next_State = FS_WHITE_ALIGN;
 		else
 			Find_Next_State = FS_FWD_UNTIL_TAN;
 		break;
-	case FS_White_Align:
+	case FS_WHITE_ALIGN:
 		PrintPlease = 3;
 		if(align(isWht(bright_l),isWht(bright_r),DFLT_SP_MULT)) 
 			Find_Next_State = FS_ROTATE_ALIGN;
 		else
-			Find_Next_State = FS_White_Align;
+			Find_Next_State = FS_WHITE_ALIGN;
 		break;
 	case FS_ROTATE_ALIGN:
 		PrintPlease = 4;
@@ -302,7 +302,7 @@ TrackSM_state TS_cruise(void)
 	}
 	
 	//Use Motors
-	MotorStep(LeftMot, RightMot, MOTORTIMESTEP)
+	MotorStep(LeftMot, RightMot, MOTORTIMESTEP);
 
 	return ret;
 	

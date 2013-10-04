@@ -11,7 +11,7 @@ extern "C"
 {
 
 /**Find State Declarations**/
-typedef enum{FS_INIT, FS_FWD_UNTIL_TAN, FS_White_Align, FS_ROTATE_ALIGN, IDLE} FindSM_state;
+typedef enum{FS_INIT, FS_FWD_UNTIL_TAN, FS_WHITE_ALIGN, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
 bool align(bool isLeftTrue, bool isRightTrue, float Mult);
 FindSM_state FS_rotate_align(void);
 //Silly globasl, fix later
