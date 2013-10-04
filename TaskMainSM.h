@@ -53,8 +53,8 @@ public:
 private:
     // state machine state functions
 	void ST_Start();
-	void ST_Find();	
-	void ST_Track();
+	void ST_Find(LightData*);	
+	void ST_Track(LightData*);
 	void ST_Idle();
  
     // state map to define state function order
