@@ -21,10 +21,7 @@ CPU ATMEL_AT91SAM7S256
   /* Definition of TaskMain */
   TASK TaskMain
   {
-    AUTOSTART = FALSE
-    {
-      APPMODE = appmode1;
-    };
+    AUTOSTART = FALSE;
     PRIORITY = 1; /* lowest priority */
     ACTIVATION = 1;
     SCHEDULE = FULL;
