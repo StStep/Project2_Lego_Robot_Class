@@ -2,7 +2,11 @@
 #include "TaskMainSM.h"
  
   /**External Event Transition Definitions**/
- 
+TaskMainSM::TaskMainSM() : StateMachine(ST_MAX_STATES)
+{
+	 TrackStateSM_inst = new TrackStateSM(this);
+}
+
 // Trigger States waiting for a touch event
 void TaskMainSM::Touch(LightData* lData)
 {
@@ -52,7 +56,7 @@ void TaskMainSM::GotoIdle()
         TRANSITION_MAP_ENTRY (ST_IDLE)  			// ST_Find
         TRANSITION_MAP_ENTRY (ST_IDLE)     			// ST_Track
         TRANSITION_MAP_ENTRY (ST_IDLE)        		// ST_Idle
-    END_TRANSITION_MAP(lData)
+    END_TRANSITION_MAP(NULL)
 }
  
  /**State Definitions**/
@@ -106,7 +110,7 @@ void TaskMainSM::ST_Find(LightData* lData)
 // Follow the line
 void TaskMainSM::ST_Track(LightData* lData)
 {
-	TrackStateSM_inst.Run(lData);
+	TrackStateSM_inst->Run(lData);
 }
  
 // Sit around and wait for touch event, at waypoint

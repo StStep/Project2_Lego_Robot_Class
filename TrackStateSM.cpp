@@ -3,8 +3,20 @@
  
 /**External Event Transition Definitions**/
  
+TrackStateSM::TrackStateSM(TaskMainSM* Parent) : StateMachine(ST_MAX_STATES)
+{
+	this->Parent = Parent;
+	
+	//Var Init
+	RMMult = 1.0;
+	LMMult = 1.0;
+	GryCnt = 0;
+	GryTapeCnt = 0;
+	
+}
+
 //The general run call for SM
-void TaskMainSM::Run(LightData* lData)
+void TrackStateSM::Run(LightData* lData)
 {
     // given the Run event, transition to a new state based upon 
     // the current state of the state machine
@@ -19,7 +31,7 @@ void TaskMainSM::Run(LightData* lData)
 }
 
 //Go back to the Start state
-void TaskMainSM::Reset(void)
+void TrackStateSM::Reset(void)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
@@ -36,7 +48,7 @@ void TaskMainSM::Reset(void)
  /**State Definitions**/
  
  
-void TaskMainSM::ST_Cruise(LightData* lData)
+void TrackStateSM::ST_Cruise(LightData* lData)
 {
 	//Tape Count
 	GryTapeCnt = 0;
@@ -84,7 +96,6 @@ void TaskMainSM::ST_Cruise(LightData* lData)
 	}
 	
 	//State Transitions
-	TrackSM_state ret = TS_CRUISE;
 	if (GryCnt > GRY_CNT_THRESH)
 	{
 		GryCnt = 0;
@@ -102,7 +113,7 @@ void TaskMainSM::ST_Cruise(LightData* lData)
 	MotorStep(LeftMot, RightMot, MOTORTIMESTEP);
 }
 
-void TaskMainSM::ST_Align_Grey(LightData* lData)
+void TrackStateSM::ST_Align_Grey(LightData* lData)
 {
 	//Grey Tape Count
 	GryTapeCnt++;
@@ -115,7 +126,7 @@ void TaskMainSM::ST_Align_Grey(LightData* lData)
 		InternalEvent(ST_STEP);
 }
 
-void TaskMainSM::ST_Step(void)
+void TrackStateSM::ST_Step(void)
 {
 		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*5);
 		if(GryTapeCnt< 3)	
@@ -124,7 +135,7 @@ void TaskMainSM::ST_Step(void)
 			InternalEvent(ST_CRUISE);
 }
 
-void TaskMainSM::ST_Align_Grey_RV(LightData* lData)
+void TrackStateSM::ST_Align_Grey_RV(LightData* lData)
 {
 	//Sensor Input
 	int LeftLightSen = lData->LeftLightSen; // Left light sensor
@@ -138,16 +149,17 @@ void TaskMainSM::ST_Align_Grey_RV(LightData* lData)
 		InternalEvent(ST_WAYPOINT);
 }
 
-void TaskMainSM::ST_Doub_Step(void)
+void TrackStateSM::ST_Doub_Step(void)
 {
 	MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*10);	
 	InternalEvent(ST_ALIGN_GREY);
 }
 
-void TaskMainSM::ST_Waypoint(LightData* lData)
+void TrackStateSM::ST_Waypoint(LightData* lData)
 {
 	//Grey Tape Count
 	GryTapeCnt++;
 	
 	Parent->GotoIdle();
 }
+

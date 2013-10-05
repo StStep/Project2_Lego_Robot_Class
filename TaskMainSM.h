@@ -28,11 +28,13 @@ bool tape_flag = 0;
 
 }
  
+ //class TaskStateSM;
+ 
 // the MainTask state machine class
 class TaskMainSM : public StateMachine
 {
 public:
-    TaskMainSM() : StateMachine(ST_MAX_STATES) {}
+    TaskMainSM();
  
     // external events taken by this state machine
     void Touch(LightData*);
@@ -47,7 +49,7 @@ private:
 	void ST_Idle();
 	
 	//Internal StateMachines
- 	TrackStateSM TrackStateSM_inst(this);
+ 	TrackStateSM *TrackStateSM_inst;
  
     // state map to define state function order
     BEGIN_STATE_MAP

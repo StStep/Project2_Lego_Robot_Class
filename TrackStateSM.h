@@ -2,18 +2,19 @@
 #define TRACK_STATE_SM_H
 
 #include "StateMachine.h"
+#include "TaskMainSM.h"
 #include "MotorSuite.h"
 #include "SensorSuite.h"
 #include "LCDSuite.h"
  
+ struct LightData;
+ class TaskMainSM;
+ 
 // the MainTask state machine class
-class TaskMainSM : public StateMachine
+class TrackStateSM : public StateMachine
 {
 public:
-    TaskMainSM(StateMachine* Parent) : StateMachine(ST_MAX_STATES) 
-    {
-    	this->Parent = Parent;
-    }
+    TrackStateSM(TaskMainSM*);
  
     // external events taken by this state machine
     void Run(LightData*);
@@ -30,20 +31,20 @@ private:
 	void ST_Waypoint(LightData*);
 	
 	//Variables
-	StateMachine* Parent; 
-	float RMMult = 1.00;
-	float LMMult = 1.00;
-	int GryCnt = 0;
-	int GryTapeCnt = 0;
+	TaskMainSM* Parent; 
+	float RMMult;
+	float LMMult ;
+	int GryCnt;
+	int GryTapeCnt;
  
     // state map to define state function order
     BEGIN_STATE_MAP
-        STATE_MAP_ENTRY(&TaskMainSM::ST_Cruise)
-		STATE_MAP_ENTRY(&TaskMainSM::ST_Align_Grey)
-		STATE_MAP_ENTRY(&TaskMainSM::ST_Step)
-		STATE_MAP_ENTRY(&TaskMainSM::ST_Align_Grey_RV)
-		STATE_MAP_ENTRY(&TaskMainSM::ST_Doub_Step)
-		STATE_MAP_ENTRY(&TaskMainSM::ST_Waypoint)
+        STATE_MAP_ENTRY(&TrackStateSM::ST_Cruise)
+		STATE_MAP_ENTRY(&TrackStateSM::ST_Align_Grey)
+		STATE_MAP_ENTRY(&TrackStateSM::ST_Step)
+		STATE_MAP_ENTRY(&TrackStateSM::ST_Align_Grey_RV)
+		STATE_MAP_ENTRY(&TrackStateSM::ST_Doub_Step)
+		STATE_MAP_ENTRY(&TrackStateSM::ST_Waypoint)
     END_STATE_MAP
  
     // state enumeration order must match the order of state
@@ -58,4 +59,4 @@ private:
         ST_MAX_STATES
     };
 };
-#endif //TASK_MAIN_SM_H
+#endif //TRACK_STATE_SM_H
