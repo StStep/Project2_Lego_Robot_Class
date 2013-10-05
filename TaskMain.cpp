@@ -16,6 +16,11 @@ TASK(TaskMain)
 	{
 		TaskMainSM_inst.Touch(lData);
 	}
+	else if(Next)
+	{
+		TaskMainSM_inst.Next();
+		Next = false;
+	}
 	else
 	{	
 		TaskMainSM_inst.Run(lData);

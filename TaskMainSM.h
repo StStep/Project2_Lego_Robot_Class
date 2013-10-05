@@ -2,33 +2,14 @@
 #define TASK_MAIN_SM_H
 
 #include "StateMachine.h"
-#include "TrackStateSM.h"
+#include "LightData.h"
 #include "MotorSuite.h"
 #include "SensorSuite.h"
 #include "LCDSuite.h"
+#include "SecStateMachines.h"
 
-
-extern "C" 
-{
-
-// structure to hold event data passed into state machine
-struct LightData : public EventData
-{
-    int LeftLightSen;
-    int RightLightSen;
-};
-
-/**Find State Declarations**/
-typedef enum{FS_INIT, FS_FWD_UNTIL_TAN, FS_WHITE_ALIGN, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
-//Find Function
-FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
-//Silly globasl, fix later
-FindSM_state Find_Next_State;
-bool tape_flag = 0;
-
-}
- 
- //class TaskStateSM;
+class TrackStateSM;
+class FindStateSM;
  
 // the MainTask state machine class
 class TaskMainSM : public StateMachine
@@ -40,7 +21,7 @@ public:
     void Touch(LightData*);
     void Run(LightData*);
 	void Reset();
-	void GotoIdle();
+	void Next();
 private:
     // state machine state functions
 	void ST_Start();
@@ -49,7 +30,7 @@ private:
 	void ST_Idle();
 	
 	//Internal StateMachines
- 	TrackStateSM *TrackStateSM_inst;
+
  
     // state map to define state function order
     BEGIN_STATE_MAP

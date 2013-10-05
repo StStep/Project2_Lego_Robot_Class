@@ -1,12 +1,10 @@
 #include <assert.h>
-#include "TaskMainSM.h"
+#include "TrackStateSM.h"
  
 /**External Event Transition Definitions**/
  
-TrackStateSM::TrackStateSM(TaskMainSM* Parent) : StateMachine(ST_MAX_STATES)
+TrackStateSM::TrackStateSM() : StateMachine(ST_MAX_STATES)
 {
-	this->Parent = Parent;
-	
 	//Var Init
 	RMMult = 1.0;
 	LMMult = 1.0;
@@ -46,8 +44,6 @@ void TrackStateSM::Reset(void)
 }
  
  /**State Definitions**/
- 
- 
 void TrackStateSM::ST_Cruise(LightData* lData)
 {
 	//Tape Count
@@ -160,6 +156,6 @@ void TrackStateSM::ST_Waypoint(LightData* lData)
 	//Grey Tape Count
 	GryTapeCnt++;
 	
-	Parent->GotoIdle();
+	Next = true;
 }
 

@@ -2,9 +2,11 @@
 #define _TaskMain_
 
 #include <math.h>
+#include "LightData.h"
 #include "SensorSuite.h"
 #include "MotorSuite.h"
 #include "TaskMainSM.h"
+#include "SecStateMachines.h"
 
 using namespace ecrobot;
 

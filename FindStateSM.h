@@ -1,17 +1,17 @@
-#ifndef TRACK_STATE_SM_H
-#define TRACK_STATE_SM_H
+#ifndef FIND_STATE_SM_H
+#define FIND_STATE_SM_H
 
 #include "StateMachine.h"
 #include "LightData.h"
 #include "MotorSuite.h"
 #include "SensorSuite.h"
 #include "LCDSuite.h"
-  
+ 
 // the MainTask state machine class
-class TrackStateSM : public StateMachine
+class FindStateSM : public StateMachine
 {
 public:
-    TrackStateSM();
+    FindStateSM();
  
     // external events taken by this state machine
     void Run(LightData*);
@@ -28,31 +28,30 @@ private:
 	void ST_Waypoint(LightData*);
 	
 	//Variables
-	float RMMult;
-	float LMMult ;
-	int GryCnt;
-	int GryTapeCnt;
- 
+	bool tape_flag;
+	
+	/**Find State Declarations**/
+	void ST_Fwd_Until_Tan(LightData*);
+	void ST_Align_White(LightData*);
+	void ST_Rotate_Align(LightData*);
+	void ST_Start_Track();
+
     // state map to define state function order
     BEGIN_STATE_MAP
-        STATE_MAP_ENTRY(&TrackStateSM::ST_Cruise)
-		STATE_MAP_ENTRY(&TrackStateSM::ST_Align_Grey)
-		STATE_MAP_ENTRY(&TrackStateSM::ST_Step)
-		STATE_MAP_ENTRY(&TrackStateSM::ST_Align_Grey_RV)
-		STATE_MAP_ENTRY(&TrackStateSM::ST_Doub_Step)
-		STATE_MAP_ENTRY(&TrackStateSM::ST_Waypoint)
+        STATE_MAP_ENTRY(&FindStateSM::ST_Fwd_Until_Tan)
+		STATE_MAP_ENTRY(&FindStateSM::ST_Align_White)
+		STATE_MAP_ENTRY(&FindStateSM::ST_Rotate_Align)
+		STATE_MAP_ENTRY(&FindStateSM::ST_Start_Track)
     END_STATE_MAP
  
     // state enumeration order must match the order of state
     // method entries in the state map
     enum E_States { 
-        ST_CRUISE = 0,
-		ST_ALIGN_GREY,
-		ST_STEP,
-		ST_ALIGN_GREY_RV,
-		ST_DOUB_STEP,
-		ST_WAYPOINT,
+        ST_FWD_UNTIL_TAN = 0,
+		ST_ALIGN_WHITE,
+		ST_ROTATE_ALIGN,
+		ST_START_TRACK,
         ST_MAX_STATES
     };
 };
-#endif //TRACK_STATE_SM_H
+#endif //FIND_STATE_SM_H

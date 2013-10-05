@@ -37,6 +37,7 @@ extern "C"
 LightSensor  leftLight(PORT_3, true); // init light sensor ON
 LightSensor  rightLight(PORT_1, true);
 TouchSensor  touch(PORT_4);
+bool Next = false;
 //SonarSensor  sonar(PORT_2);
 
 //Function Declarations
