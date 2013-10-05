@@ -21,4 +21,14 @@ void MotorStep(int LeftPWM, int RightPWM, int TimeStep)
 	clock.wait(TimeStep); // Perform for duration of .1 seconds
 }
 
+int GetLeftMotCnt()
+{
+	return leftMotor.getCount();
+}
+
+int GetRightMotCnt()
+{
+	return rightMotor.getCount();
+}
+
 } //End Extern C

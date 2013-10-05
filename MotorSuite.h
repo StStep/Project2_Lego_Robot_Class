@@ -18,6 +18,11 @@ using namespace ecrobot;
 #define MAX_SP_MULT 2.0
 #define DFLT_SP_MULT 1.0
 
+//Physical Specs
+#define WHEEL_RADIUS 1.8
+#define WHEEL_MULT (2.0*3.142*WHEEL_RADIUS/360.0)
+#define BODY_WIDTH 9.1
+
 
 #define MOTORTIMESTEP 50
 
@@ -33,6 +38,8 @@ Motor leftMotor(PORT_C);
 
 //Function Declarations
 void MotorStep(int LeftPWM, int RightPWN, int TimeStep);
+int GetLeftMotCnt();
+int GetRightMotCnt();
 
 } //End Extern C
 #endif 
