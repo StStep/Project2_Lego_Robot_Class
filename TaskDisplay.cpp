@@ -6,7 +6,7 @@
 extern "C" 
 {
 /**
-This task runs once every 250ms, updates display
+This task runs once every 250ms, updates display, mainly for debug purposes, not much port potential
 **/
 TASK(TaskDisplay)
 {
@@ -19,8 +19,6 @@ TASK(TaskDisplay)
 		lcd.clear(); // Clear the current LCD display
 		lcd.putf("sn", "NXT Sensors");
 		lcd.putf("sddn", "Light: ", LeftLightSen,0,RightLightSen,5);
-		lcd.putf("sdn", "RMMult:", (int) (RMMult*100.0),0);
-		lcd.putf("sdn", "LMMult:",(int) (LMMult*100.0),0);
 		lcd.putf("sdn", "In State = ", PrintPlease, 0);
         lcd.disp(); // Update the LCD display
 	

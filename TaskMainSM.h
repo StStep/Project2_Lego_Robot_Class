@@ -6,10 +6,6 @@
 #include "SensorSuite.h"
 #include "LCDSuite.h"
 
-//From Early Imp
-extern "C" 
-{
-
 // structure to hold event data passed into state machine
 struct LightData : public EventData
 {
@@ -17,33 +13,25 @@ struct LightData : public EventData
     int RightLightSen;
 };
 
-/**Find State Declarations**/
+//State Enumerations
+//Find State
 typedef enum{FS_INIT, FS_ALIGN_BLACK, FS_ALIGN_WHITE, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
-FindSM_state Find_Next_State;
-bool tape_flag = 0;
-
-//Function
-FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
-
-/** Track State Declarations **/
+//Track State
 typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_STEP2, 
 									   TS_ALIGN_GREY2, TS_STEP3, TS_ALIGN_GREY_RV2,
 									   TS_WAYPOINT, TS_STEP4} TrackSM_state;
-float RMMult = 1.00;
-float LMMult = 1.00;
-int GryCnt = 0;
-TrackSM_state Track_Next_State;
-
-//Function
-TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen);
-
-}
  
 // the MainTask state machine class
 class TaskMainSM : public StateMachine
 {
 public:
-    TaskMainSM() : StateMachine(ST_MAX_STATES) {}
+    TaskMainSM() : StateMachine(ST_MAX_STATES) 
+	{
+		tape_flag = 0;
+		RMMult = 1.00;
+		LMMult = 1.00;
+		GryCnt = 0;
+	}
  
     // external events taken by this state machine
     void Touch(LightData*);
@@ -73,5 +61,24 @@ private:
 		ST_IDLE,
         ST_MAX_STATES
     };
+	
+//Internal SM Resources
+	
+/**Find State Declarations**/
+	FindSM_state Find_Next_State;
+	bool tape_flag;
+
+	//Function
+	FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
+
+/** Track State Declarations **/
+	float RMMult;
+	float LMMult;
+	int GryCnt;
+	TrackSM_state Track_Next_State;
+
+	//Function
+	TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen);
+
 };
 #endif //TASK_MAIN_SM_H

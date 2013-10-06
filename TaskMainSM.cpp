@@ -171,13 +171,10 @@ void TaskMainSM::ST_Idle()
 {
 }
 
-extern "C" 
-{
-
 /**---------------------------------**/
 /** Find SM Functions for now **/
 /**--------------------------------**/
-FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen)
+FindSM_state TaskMainSM::FS_rotate_align(int LeftLightSen, int RightLightSen)
 {
 
 	//Default return state
@@ -211,7 +208,7 @@ FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen)
 /**----------------------------------**/
 /** Track SM Functions for now **/
 /**---------------------------------**/
-TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
+TrackSM_state TaskMainSM::TS_cruise(int LeftLightSen, int RightLightSen)
 {
 	
 	int LeftMot = 0;
@@ -272,4 +269,3 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 	return ret;
 	
 }
-} //End Extren C
