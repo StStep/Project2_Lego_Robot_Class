@@ -20,11 +20,11 @@ using namespace ecrobot;
 
 //Physical Specs
 #define WHEEL_RADIUS 1.8
-#define WHEEL_MULT (2.0*3.142*WHEEL_RADIUS/360.0)
+#define WHEEL_MULT (2.0*3.1415*WHEEL_RADIUS/360.0)
 #define BODY_WIDTH 9.1
 
 
-#define MOTORTIMESTEP 50
+#define MOTORTIMESTEP 20
 
 extern "C" {
 
