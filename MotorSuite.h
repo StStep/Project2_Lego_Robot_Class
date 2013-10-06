@@ -24,7 +24,7 @@ using namespace ecrobot;
 #define BODY_WIDTH 9.1
 
 
-#define MOTORTIMESTEP 20
+#define MOTORTIMESTEP 50
 
 extern "C" {
 
