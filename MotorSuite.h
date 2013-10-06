@@ -40,6 +40,7 @@ Motor leftMotor(PORT_C);
 void MotorStep(int LeftPWM, int RightPWN, int TimeStep);
 int GetLeftMotCnt();
 int GetRightMotCnt();
+bool align(bool isLeftTrue, bool isRightTrue, float Mult);
 
 } //End Extern C
 #endif 

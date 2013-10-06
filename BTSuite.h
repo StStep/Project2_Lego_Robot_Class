@@ -12,8 +12,6 @@ static const CHAR* PASSKEY = "1234";
 
 using namespace ecrobot;
 
-
-
 extern "C" {
 	// Initialize Bluettooth obj.
 	Bluetooth BlueTooth;

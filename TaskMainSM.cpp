@@ -8,11 +8,11 @@ void TaskMainSM::Touch(LightData* lData)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      	// - Current State -
-		TRANSITION_MAP_ENTRY (ST_FIND)				// ST_Start
-        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  		// ST_Find
+    BEGIN_TRANSITION_MAP                      			// - Current State -
+		TRANSITION_MAP_ENTRY (ST_FIND)					// ST_Start
+        TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Find
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)     	// ST_Track
-        TRANSITION_MAP_ENTRY (ST_TRACK)             // ST_Idle
+        TRANSITION_MAP_ENTRY (ST_TRACK)             	// ST_Idle
     END_TRANSITION_MAP(lData)
 }
  
@@ -21,9 +21,9 @@ void TaskMainSM::Run(LightData* lData)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      	// - Current State -
-		TRANSITION_MAP_ENTRY (EVENT_IGNORED)  		// ST_Start
-        TRANSITION_MAP_ENTRY (ST_FIND)  			// ST_Find
+    BEGIN_TRANSITION_MAP                      			// - Current State -
+		TRANSITION_MAP_ENTRY (EVENT_IGNORED)  	// ST_Start
+        TRANSITION_MAP_ENTRY (ST_FIND)  				// ST_Find
         TRANSITION_MAP_ENTRY (ST_TRACK)        		// ST_Track
         TRANSITION_MAP_ENTRY (EVENT_IGNORED)     	// ST_Idle
     END_TRANSITION_MAP(lData)
@@ -34,18 +34,18 @@ void TaskMainSM::Reset(void)
 {
     // given the Halt event, transition to a new state based upon 
     // the current state of the state machine
-    BEGIN_TRANSITION_MAP                      	// - Current State -
+    BEGIN_TRANSITION_MAP                      		// - Current State -
 		TRANSITION_MAP_ENTRY (ST_START)  			// ST_Start
 		TRANSITION_MAP_ENTRY (ST_START)  			// ST_Find
-		TRANSITION_MAP_ENTRY (ST_START)        		// ST_Track
-		TRANSITION_MAP_ENTRY (ST_START)            	// ST_Idle
+		TRANSITION_MAP_ENTRY (ST_START)        	// ST_Track
+		TRANSITION_MAP_ENTRY (ST_START)            // ST_Idle
     END_TRANSITION_MAP(NULL)
 }
  
  /**State Definitions**/
  
 
-// SM starts here, and does initilizaing thing? or nothing
+// SM starts here
 void TaskMainSM::ST_Start() 
 {
 }
@@ -61,21 +61,21 @@ void TaskMainSM::ST_Find(LightData* lData)
 	{
 	case FS_INIT:
 		PrintPlease = 1;
-		Find_Next_State  = FS_FWD_UNTIL_TAN;
+		Find_Next_State  = FS_ALIGN_BLACK;
 		break;
-	case FS_FWD_UNTIL_TAN:
+	case FS_ALIGN_BLACK:
 		PrintPlease = 2;
 		if(align(isBlk(LeftLightSen),isBlk(RightLightSen),DFLT_SP_MULT)) 
-			Find_Next_State = FS_WHITE_ALIGN;
+			Find_Next_State = FS_ALIGN_WHITE;
 		else
-			Find_Next_State = FS_FWD_UNTIL_TAN;
+			Find_Next_State = FS_ALIGN_BLACK;
 		break;
-	case FS_WHITE_ALIGN:
+	case FS_ALIGN_WHITE:
 		PrintPlease = 3;
 		if(align(isWht(LeftLightSen),isWht(RightLightSen),DFLT_SP_MULT)) 
 			Find_Next_State = FS_ROTATE_ALIGN;
 		else
-			Find_Next_State = FS_WHITE_ALIGN;
+			Find_Next_State = FS_ALIGN_WHITE;
 		break;
 	case FS_ROTATE_ALIGN:
 		PrintPlease = 4;
@@ -177,35 +177,6 @@ extern "C"
 /**---------------------------------**/
 /** Find SM Functions for now **/
 /**--------------------------------**/
-
-bool align(bool isLeftTrue, bool isRightTrue, float Mult)
-{
-	//Defualt return state
-	bool ret =  false;
-
-	//Both on line, change states
-	if(isLeftTrue && isRightTrue)
-	{
-		MotorStep(NOSPEED, NOSPEED, 0);
-		ret = true;
-	}
-	else if(isRightTrue) 
-	{
-		MotorStep((int) Mult*BASESPEED, -(int) Mult*HALFSPEED, MOTORTIMESTEP);
-	}
-	else if(isLeftTrue) 
-	{
-		MotorStep(-(int) Mult*HALFSPEED, (int) Mult*BASESPEED, MOTORTIMESTEP);
-	}
-	else //while neither of the sensors have detected black tape, move forward
-	{
-		MotorStep((int) Mult*BASESPEED, (int) Mult*BASESPEED, MOTORTIMESTEP);
-	}
-
-	return ret;
-
-}
-
 FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen)
 {
 
@@ -250,8 +221,8 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 	{
 		GryCnt +=1;
 		
-		LeftMot = HALFSPEED;//QUARTSPEED;
-		RightMot = HALFSPEED;//QUARTSPEED;
+		LeftMot = HALFSPEED;
+		RightMot = HALFSPEED;
 	}		
 	else if (isBlk(RightLightSen))
 	{
@@ -259,8 +230,8 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 		LMMult += .25;
 		//RMMult -= .1;
 		
-		LeftMot = (int) LMMult*BASESPEED; // Left motor forward
-		RightMot =(int)  -RMMult*HALFSPEED; // Right motor zero
+		LeftMot = (int) LMMult*BASESPEED; 
+		RightMot =(int)  -RMMult*HALFSPEED; 
 	}
 	else if (isBlk(LeftLightSen))
 	{	
@@ -268,8 +239,8 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 		//LMMult -= .1;
 		RMMult += .25;
 
-		LeftMot = (int) -LMMult*HALFSPEED; // Left motor zero
-		RightMot = (int) RMMult*BASESPEED; // Right motor backwards
+		LeftMot = (int) -LMMult*HALFSPEED;
+		RightMot = (int) RMMult*BASESPEED;
 	}
 	else
 	{
@@ -277,8 +248,8 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 		RMMult = DFLT_SP_MULT;
 		LMMult = DFLT_SP_MULT;
 		
-		LeftMot = (int) LMMult*BASESPEED; // Left motor zero
-		RightMot = (int) RMMult*BASESPEED; // Right motor backwards
+		LeftMot = (int) LMMult*BASESPEED;
+		RightMot = (int) RMMult*BASESPEED; 
 	}
 	
 	//State Transitions
@@ -290,10 +261,9 @@ TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen)
 	}
 	else if (GryCnt > GRY_CNT_THRESH/2)
 	{
-		//Maybe stopping and looking is a good idea?
-		//Perhaps once one passes a threshold of 2 ina row?
-		LeftMot = -HALFSPEED;//QUARTSPEED;
-		RightMot = -HALFSPEED;//QUARTSPEED;
+		//Reverses a bit to make extra sure grey tape is detected
+		LeftMot = -HALFSPEED;
+		RightMot = -HALFSPEED;
 	}
 	
 	//Use Motors

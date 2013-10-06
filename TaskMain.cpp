@@ -5,7 +5,6 @@ extern "C"
 {
 TASK(TaskMain)
 {	
-	
 	// Read the Touch and Light Sensor
 	int Bump = GetTouchSen();
 	LightData* lData = new LightData;

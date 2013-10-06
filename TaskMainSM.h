@@ -18,13 +18,12 @@ struct LightData : public EventData
 };
 
 /**Find State Declarations**/
-typedef enum{FS_INIT, FS_FWD_UNTIL_TAN, FS_WHITE_ALIGN, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
-//Find Function
-bool align(bool isLeftTrue, bool isRightTrue, float Mult);
-FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
-//Silly globasl, fix later
+typedef enum{FS_INIT, FS_ALIGN_BLACK, FS_ALIGN_WHITE, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
 FindSM_state Find_Next_State;
 bool tape_flag = 0;
+
+//Function
+FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
 
 /** Track State Declarations **/
 typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_STEP2, 
@@ -33,10 +32,10 @@ typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_STEP2,
 float RMMult = 1.00;
 float LMMult = 1.00;
 int GryCnt = 0;
-//track functions
-TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen);
-//Silly Global
 TrackSM_state Track_Next_State;
+
+//Function
+TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen);
 
 }
  

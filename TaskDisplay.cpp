@@ -6,7 +6,7 @@
 extern "C" 
 {
 /**
-This task runs once every 250ms, I don't know if that should be the target time or not yet
+This task runs once every 250ms, updates display
 **/
 TASK(TaskDisplay)
 {

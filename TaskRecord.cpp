@@ -17,7 +17,7 @@ int lMotOld = 0;
 
 
 /**
-This task runs once every 500ms, I don't know if that should be the target time or not yet
+This task loggs BlueTooth Data
 **/
 TASK(TaskRecord)
 {
