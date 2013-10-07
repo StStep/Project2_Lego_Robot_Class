@@ -14,12 +14,10 @@ struct LightData : public EventData
 };
 
 //State Enumerations
-//Find State
+//Find States
 typedef enum{FS_INIT, FS_ALIGN_BLACK, FS_ALIGN_WHITE, FS_ROTATE_ALIGN, FS_IDLE} FindSM_state;
-//Track State
-typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_STEP2, 
-									   TS_ALIGN_GREY2, TS_STEP3, TS_ALIGN_GREY_RV2,
-									   TS_WAYPOINT, TS_STEP4} TrackSM_state;
+//Track States
+typedef enum{TS_CRUISE, TS_ALIGN_GREY, TS_STEP, TS_ALIGN_GREY_RV, TS_DOUB_STEP,  TS_WAYPOINT} TrackSM_state;
  
 // the MainTask state machine class
 class TaskMainSM : public StateMachine
@@ -31,6 +29,7 @@ public:
 		RMMult = 1.00;
 		LMMult = 1.00;
 		GryCnt = 0;
+		GryTapeCnt = 0;
 	}
  
     // external events taken by this state machine
@@ -72,10 +71,11 @@ private:
 	FindSM_state FS_rotate_align(int LeftLightSen, int RightLightSen);
 
 /** Track State Declarations **/
+	TrackSM_state Track_Next_State;
 	float RMMult;
 	float LMMult;
 	int GryCnt;
-	TrackSM_state Track_Next_State;
+	int GryTapeCnt;
 
 	//Function
 	TrackSM_state TS_cruise(int LeftLightSen, int RightLightSen);
