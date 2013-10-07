@@ -60,30 +60,30 @@ void TaskMainSM::ST_Find(LightData* lData)
 	switch(Find_Next_State)
 	{
 	case FS_INIT:
-		PrintPlease = 1;
+		Debug_PrintPlease = 1;
 		Find_Next_State  = FS_ALIGN_BLACK;
 		break;
 	case FS_ALIGN_BLACK:
-		PrintPlease = 2;
+		Debug_PrintPlease = 2;
 		if(align(isBlk(LeftLightSen),isBlk(RightLightSen),DFLT_SP_MULT)) 
 			Find_Next_State = FS_ALIGN_WHITE;
 		else
 			Find_Next_State = FS_ALIGN_BLACK;
 		break;
 	case FS_ALIGN_WHITE:
-		PrintPlease = 3;
+		Debug_PrintPlease = 3;
 		if(align(isWht(LeftLightSen),isWht(RightLightSen),DFLT_SP_MULT)) 
 			Find_Next_State = FS_ROTATE_ALIGN;
 		else
 			Find_Next_State = FS_ALIGN_WHITE;
 		break;
 	case FS_ROTATE_ALIGN:
-		PrintPlease = 4;
+		Debug_PrintPlease = 4;
 		Find_Next_State = FS_rotate_align(LeftLightSen, RightLightSen);
 		break;
 	default:
 		Find_Next_State = FS_INIT;
-		PrintPlease = 0;
+		Debug_PrintPlease = 0;
 		MotorStep(NOSPEED, NOSPEED, 0);
 		InternalEvent(ST_TRACK);
 		break;
@@ -101,64 +101,53 @@ void TaskMainSM::ST_Track(LightData* lData)
 	switch(Track_Next_State)
 	{
 	case TS_CRUISE:
-		PrintPlease = 5;
+		Debug_PrintPlease = 5;
 		Track_Next_State = TS_cruise(LeftLightSen, RightLightSen);
+		GryTapeCnt = 0;
 		break;
 	case TS_ALIGN_GREY:
-		PrintPlease = 6;
+		Debug_PrintPlease = 6;
 		if(align(isGry(LeftLightSen),isGry(RightLightSen), DFLT_SP_MULT)) 
+		{
 			Track_Next_State = TS_STEP;
+			GryTapeCnt++;
+		}
 		else
 			Track_Next_State = TS_ALIGN_GREY;
 		break;
 	case TS_STEP:
-		PrintPlease = 7;
-		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*5);		
-		Track_Next_State =TS_ALIGN_GREY_RV;
+		Debug_PrintPlease = 7;
+		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*5);
+		if(GryTapeCnt < 3)
+			Track_Next_State =TS_ALIGN_GREY_RV;
+		else 
+			Track_Next_State =TS_CRUISE;
 		break;
 	case TS_ALIGN_GREY_RV:
-		PrintPlease = 8;
-		if(align(isGry(LeftLightSen),isGry(RightLightSen), -DFLT_SP_MULT)) 
-			Track_Next_State = TS_STEP2;
+		Debug_PrintPlease = 8;
+		if(align(isGry(LeftLightSen),isGry(RightLightSen), -DFLT_SP_MULT))
+		{
+			if(GryTapeCnt < 2)
+				Track_Next_State = TS_DOUB_STEP;
+			else
+				Track_Next_State = TS_WAYPOINT;
+		}
 		else
 			Track_Next_State = TS_ALIGN_GREY_RV;
 		break;
-	case TS_STEP2:
-		PrintPlease = 7;
+	case TS_DOUB_STEP:
+		Debug_PrintPlease = 9;
 		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*10);
-		Track_Next_State =TS_ALIGN_GREY2;
-		break;
-	case TS_ALIGN_GREY2:
-		PrintPlease = 6;
-		if(align(isGry(LeftLightSen),isGry(RightLightSen), DFLT_SP_MULT)) 
-			Track_Next_State = TS_STEP3;
-		else
-			Track_Next_State = TS_ALIGN_GREY2;
-		break;
-	case TS_STEP3:
-		PrintPlease = 7;		
-		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*5);
-		Track_Next_State =TS_ALIGN_GREY_RV2;
-		break;
-	case TS_ALIGN_GREY_RV2:
-		PrintPlease = 8;
-		if(align(isGry(LeftLightSen),isGry(RightLightSen), -DFLT_SP_MULT)) 
-			Track_Next_State = TS_WAYPOINT;
-		else
-			Track_Next_State = TS_ALIGN_GREY_RV2;
+		Track_Next_State =TS_ALIGN_GREY;
 		break;
 	case TS_WAYPOINT:
-		PrintPlease = 0;
-		Track_Next_State = TS_STEP4;
-		
+		Debug_PrintPlease = 10;
 		MotorStep(NOSPEED, NOSPEED, 0);
 		
+		Track_Next_State = TS_STEP;	
+		GryTapeCnt++;
+		
 		InternalEvent(ST_IDLE);
-		break;
-	case TS_STEP4:
-		PrintPlease = 7;
-		MotorStep(BASESPEED, BASESPEED, MOTORTIMESTEP*5);
-		Track_Next_State = TS_CRUISE;
 		break;
 	default:
 		Track_Next_State =TS_CRUISE;

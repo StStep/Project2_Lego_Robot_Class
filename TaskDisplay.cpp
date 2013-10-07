@@ -19,7 +19,7 @@ TASK(TaskDisplay)
 		lcd.clear(); // Clear the current LCD display
 		lcd.putf("sn", "NXT Sensors");
 		lcd.putf("sddn", "Light: ", LeftLightSen,0,RightLightSen,5);
-		lcd.putf("sdn", "In State = ", PrintPlease, 0);
+		lcd.putf("sdn", "In State = ", Debug_PrintPlease, 0);
         lcd.disp(); // Update the LCD display
 	
 	TerminateTask();

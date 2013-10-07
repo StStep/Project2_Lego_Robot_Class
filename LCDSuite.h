@@ -12,7 +12,8 @@ extern "C" {
 // Initialize LCD
 Lcd lcd;
 
-int PrintPlease = 0;
+//For Debugging states
+int Debug_PrintPlease = 0;
 
 } //End Extern C
 #endif 
