@@ -28,8 +28,8 @@ public:
 		tape_flag = 0;
 		RMMult = 1.00;
 		LMMult = 1.00;
-		GryCnt = 0;
 		GryTapeCnt = 0;
+		GryCnt = 0;
 	}
  
     // external events taken by this state machine

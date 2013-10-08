@@ -202,17 +202,9 @@ TrackSM_state TaskMainSM::TS_cruise(int LeftLightSen, int RightLightSen)
 	
 	int LeftMot = 0;
 	int RightMot = 0;
-	
-	if (isGry(LeftLightSen) || isGry(RightLightSen))
-	{
-		GryCnt +=1;
 		
-		LeftMot = HALFSPEED;
-		RightMot = HALFSPEED;
-	}		
-	else if (isBlk(RightLightSen))
+	if (isBlk(RightLightSen))
 	{
-		GryCnt = 0;
 		LMMult += .25;
 		//RMMult -= .1;
 		
@@ -221,7 +213,6 @@ TrackSM_state TaskMainSM::TS_cruise(int LeftLightSen, int RightLightSen)
 	}
 	else if (isBlk(LeftLightSen))
 	{	
-		GryCnt = 0;
 		//LMMult -= .1;
 		RMMult += .25;
 
@@ -230,13 +221,18 @@ TrackSM_state TaskMainSM::TS_cruise(int LeftLightSen, int RightLightSen)
 	}
 	else
 	{
-		GryCnt = 0;
+
 		RMMult = DFLT_SP_MULT;
 		LMMult = DFLT_SP_MULT;
 		
 		LeftMot = (int) LMMult*BASESPEED;
 		RightMot = (int) RMMult*BASESPEED; 
 	}
+	
+	if (isGry(LeftLightSen) || isGry(RightLightSen))
+		GryCnt +=1;
+	else
+		GryCnt = 0;
 	
 	//State Transitions
 	TrackSM_state ret = TS_CRUISE;
@@ -245,11 +241,23 @@ TrackSM_state TaskMainSM::TS_cruise(int LeftLightSen, int RightLightSen)
 		GryCnt = 0;
 		ret = TS_ALIGN_GREY;
 	}
-	else if (GryCnt > GRY_CNT_THRESH/2)
+	else if (GryCnt > GRY_CNT_THRESH_3QUART)
+	{
+		//Reverses a bit to make extra sure grey tape is detected
+		LeftMot = -HALFSPEED;
+		RightMot = HALFSPEED;
+	}
+	else if (GryCnt > GRY_CNT_THRESH_HALF)
 	{
 		//Reverses a bit to make extra sure grey tape is detected
 		LeftMot = -HALFSPEED;
 		RightMot = -HALFSPEED;
+	}
+	else if (GryCnt > GRY_CNT_THRESH_QUART)
+	{
+		//Reverses a bit to make extra sure grey tape is detected
+		LeftMot = HALFSPEED;
+		RightMot = HALFSPEED;
 	}
 	
 	//Use Motors
